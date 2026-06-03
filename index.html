@@ -2763,68 +2763,576 @@
        GLOBAL CONFIGS & DATA
        ================================================================== */
     
-    // Quiz Questions Data
-    const quizQuestions = [
+    // All available quiz questions (50 total)
+    const allQuizQuestions = [
       {
-        question: "You want Claude to draft a newsletter. To avoid 'Tyranny of the Average' (bland copy), what is the first step you should execute during the Draft phase?",
+        question: "You want to write a project proposal. Instead of writing the prompt yourself, you decide to use Tactic M1 (\"Use AI to use AI\"). What is the correct sequence?",
         options: [
-          "Ask it to write the newsletter and make it sound extremely creative and fun.",
-          "Provide a personal voice guide with samples, and instruct it to avoid common clichés like em-dashes and 'in today's world.'",
-          "Copy a generic system prompt from a web search and hope the model matches the requested tone.",
-          "Write the newsletter yourself and ask Claude to fix the formatting errors."
-        ],
-        answer: 1, // index 1
-        explanation: "Establishing style guidelines (positive rules and negative style guides) and anchoring the model with real writing samples are the most effective ways to drag it off the median."
-      },
-      {
-        question: "During a long session building a code module, you notice the model is repeating bugs you solved 30 minutes ago. What failure is occurring, and how do you fix it?",
-        options: [
-          "Sycophancy: Tell the model it is doing a great job so it gains confidence.",
-          "Hallucination: Ask for citations of where the bug first occurred.",
-          "Context Rot: Compact the session logic or open a fresh thread seeding the current correct files.",
-          "Knowledge Cutoff: Trigger a web search to check for the latest versions of the language."
-        ],
-        answer: 2, // index 2
-        explanation: "As threads lengthen, instructions degrade. End the thread, compile the current state, and start a fresh session with that state as a seed."
-      },
-      {
-        question: "You ask Claude to compile an investor deck and it immediately outputs ten slides with fake company statistics without asking for your actual reports. What is this, and how do you halt it?",
-        options: [
-          "Overeager Intern: Apply a 'Do Not Start Yet' rule, forcing the model to interview you one question at a time.",
-          "Hallucination: Let it write the slides first, and rewrite the false details yourself.",
-          "Tyranny of the Average: Instruct the model to write the slides in a cynical voice.",
-          "Finite Context: Delete some of your uploaded templates to make more room."
-        ],
-        answer: 0,
-        explanation: "Models default to immediate generation. Forcing an intake interview halts generation until parameters are locked."
-      },
-      {
-        question: "You want Claude to critique a new project plan, but it replies that the plan is 'genius' and 'guaranteed to succeed'. What is this behavior, and how do you correct it?",
-        options: [
-          "Context Rot: Clear the thread cache and reload the workspace files.",
-          "Sycophancy: Force the model to act as a critic, listing failure modes first before benefits.",
-          "Overeager Intern: Break the project plan into five separate smaller files.",
-          "Hallucination: Pin the document to raw sources and demand strict quote citations."
+          "Write the prompt in a new chat, run it in the same chat, and manually edit the output.",
+          "Ask Chat A (Builder) to interview you and construct a high-fidelity prompt, then run that prompt in a clean Chat B (Doer).",
+          "Copy-paste a generic prompt template from Google and paste it into multiple chats.",
+          "Write a very brief sentence and ask the model to generate the proposal immediately."
         ],
         answer: 1,
-        explanation: "Sycophancy rewards agreement. You must enforce an adversarial review role, requiring failure lists first to suppress flattery."
+        explanation: "Tactic M1 separates the 'Builder' (collaborative prompt design) and 'Doer' (execution) roles across clean threads to optimize context and focus."
       },
       {
-        question: "You have 30 customer transcripts to review. Uploading all of them to a single chat is likely to trigger what issue, and how do you avoid it?",
+        question: "You want to avoid the \"Cold Start\" problem where you have to re-explain your brand voice and preferences in every new chat. What is the most portable workaround?",
         options: [
-          "Tyranny of the Average: Avoid by writing the summaries yourself.",
-          "Sycophancy: Avoid by asking Claude to review the text using a blind assessment.",
-          "Finite Context / Attention Decay: Avoid by dispatching transcripts to isolated subagent threads and merging findings.",
-          "Knowledge Cutoff: Avoid by forcing web searches on each customer transcript."
+          "Copy-paste your entire 50-page company handbook into every chat.",
+          "Maintain a structured 'Hot Start' context document that summarizes role, guidelines, and style rules, and upload it to start.",
+          "Always work in one single chat thread forever.",
+          "Trust the LLM's default settings, as modern frontier models automatically detect your preferences."
         ],
-        answer: 2,
-        explanation: "Heavy context windows rot attention. Dispersing reports across parallel threads keeps each reading pass highly accurate."
+        answer: 1,
+        explanation: "A portable 'Hot Start' context document provides a lightweight, stateless setup that is easy to attach or copy-paste at the start of any new session."
+      },
+      {
+        question: "You need to compile a financial report. In the Gather phase, you realize your source spreadsheet is extremely large and contains mostly irrelevant columns. If you upload the raw, uncleaned file, what threat do you face?",
+        options: [
+          "Sycophancy.",
+          "Garbage In, Garbage Out (GIGO) and attention decay.",
+          "Premature formatting.",
+          "Tyranny of the Average."
+        ],
+        answer: 1,
+        explanation: "Feeding raw, noisy context degrades model attention and wastes the context window, causing the model to miss crucial details."
+      },
+      {
+        question: "The \"Overeager Intern\" pitfall refers to what behavior in frontier LLMs?",
+        options: [
+          "The model refusing to write anything until you pay a tip.",
+          "The model immediately generating full pages of generic content before fully understanding the requirements.",
+          "The model failing to remember instructions from the beginning of the chat.",
+          "The model asking too many critical questions without ever producing work."
+        ],
+        answer: 1,
+        explanation: "Models are biased toward immediate completion. The 'Overeager Intern' jumps to drafts without pausing to clarify or validate inputs."
+      },
+      {
+        question: "How can you systematically halt the \"Overeager Intern\" when kicking off a complex project?",
+        options: [
+          "Threaten to downvote the response if it is incorrect.",
+          "Enforce a 'Do Not Start Yet' intake interview rule, instructing the model to ask questions and wait for your answers.",
+          "Write a longer prompt with more adjectives.",
+          "Use a model with a smaller context window."
+        ],
+        answer: 1,
+        explanation: "An intake constraint forces the model to halt generation and gather parameters first through a dialogue interface."
+      },
+      {
+        question: "When designing a \"Curated Context Folder\" for a Claude Project, which of the following is considered a component of \"The Shape\"?",
+        options: [
+          "Brand vocabulary guide and banned phrases list.",
+          "Historic high-fidelity outputs and formatting templates.",
+          "Raw CRM spreadsheets and customer data.",
+          "Web search results from competitor analysis."
+        ],
+        answer: 1,
+        explanation: "'The Shape' defines the structure, template, and formatting patterns of the desired output."
+      },
+      {
+        question: "What is the primary purpose of separating the \"Shape\" from the \"Substance\" in your context gathering?",
+        options: [
+          "It saves memory on your local hard drive.",
+          "It allows the model to map dynamic raw data (Substance) cleanly onto the target structure (Shape).",
+          "It prevents the model from hallucinating numbers.",
+          "It reduces the cost of API tokens by half."
+        ],
+        answer: 1,
+        explanation: "Clear separation ensures the model understands what is format/style (Shape) versus what is factual, dynamic variable data (Substance)."
+      },
+      {
+        question: "You are using a Custom GPT/Claude Project for customer support drafts. Where should you place rules like \"Never use em-dashes\" or \"Do not apologize\"?",
+        options: [
+          "In the user message of every single response.",
+          "In the project's system instructions / custom instructions.",
+          "In a README file stored on your computer.",
+          "In the raw customer tickets."
+        ],
+        answer: 1,
+        explanation: "Persistent guidelines belong in the project context or system prompt so they are consistently applied to all chats."
+      },
+      {
+        question: "What is the \"Garbage In, Garbage Out\" limit in AI Operations?",
+        options: [
+          "The AI will output rubbish if the prompt lacks formatting symbols.",
+          "Low-quality, messy, or unstructured context results in low-quality, distracted AI outputs.",
+          "The LLM's database contains outdated web crawls.",
+          "The user inputs spelling mistakes which crash the model."
+        ],
+        answer: 1,
+        explanation: "Grounding context must be high-quality and clean; cluttered or irrelevant text wastes attention and lowers output precision."
+      },
+      {
+        question: "You have a task to write a technical API documentation file based on some source code. What should you gather first?",
+        options: [
+          "The full source code files and a template of your team's standard API docs.",
+          "A list of competitors' APIs.",
+          "A generic prompt asking for API documentation.",
+          "An image mockup of the website."
+        ],
+        answer: 0,
+        explanation: "Gathering the exact source code (Substance) and the target doc template (Shape) ensures the model produces grounded, formatted output."
+      },
+      {
+        question: "You ask Claude: \"Do you think my new marketing strategy is good?\" and it answers \"Yes, it is excellent and very innovative!\" What failure mode is this?",
+        options: [
+          "Hallucination.",
+          "Sycophancy (Agreeableness).",
+          "Attention Decay.",
+          "Knowledge Cutoff."
+        ],
+        answer: 1,
+        explanation: "LLMs are trained to be helpful and polite, which defaults to validating the user's opinions rather than pointing out flaws."
+      },
+      {
+        question: "How can you prevent Sycophancy during a strategy session?",
+        options: [
+          "Tell the model that you are a beginner so it explains things simply.",
+          "Explicitly command the model to act as a harsh critic, list failure modes first, and push back on assumptions.",
+          "Use capital letters to show authority.",
+          "Keep your ideas vague so the model has to guess them."
+        ],
+        answer: 1,
+        explanation: "Assigning an adversarial role and requiring critique *before* approval breaks the agreeable feedback loop."
+      },
+      {
+        question: "In the Brainstorm phase, you want to review a business model. What is the most effective prompt constraint to get honest feedback?",
+        options: [
+          "Rate this strategy on a scale of 1 to 10.",
+          "Identify 3 hidden assumptions, 2 critical failure paths, and push back on my primary conclusion.",
+          "Tell me what you think of this idea, be honest.",
+          "Write a press release celebrating the launch of this business model."
+        ],
+        answer: 1,
+        explanation: "Specific, structured prompts that force negative critique and highlight assumptions prevent agreeable fluff."
+      },
+      {
+        question: "Why is it crucial to run the Brainstorm phase in a separate chat thread from the Draft/Build phases?",
+        options: [
+          "It prevents the model from remembering the project name.",
+          "It separates the strategic debate and raw ideas from the clean, structured writing context.",
+          "It reduces internet bandwidth usage.",
+          "The model will charge less if you use more chats."
+        ],
+        answer: 1,
+        explanation: "Keeping debates in a separate thread prevents the long conversational history (muddy context) from diluting the focus of the final draft/build."
+      },
+      {
+        question: "You are brainstorming features for an app. The model lists 10 features, all of which are very obvious. What tactic can you use to get more creative ideas?",
+        options: [
+          "Ask the model to 'think outside the box'.",
+          "Force it to critique the 10 obvious features, then generate concepts that avoid those patterns.",
+          "Restart the computer.",
+          "Ask the model to write code for the first feature."
+        ],
+        answer: 1,
+        explanation: "Forcing the model to list and rule out average/common options drives it to explore less typical, higher-value ideas."
+      },
+      {
+        question: "What does \"Adversarial Review\" mean in the context of prompt operations?",
+        options: [
+          "Getting a competitor's AI to review your code.",
+          "Framing the AI as an opponent or a critical auditor to find flaws.",
+          "Insulting the AI to test its guardrails.",
+          "Rejecting all answers until the AI gives the correct one."
+        ],
+        answer: 1,
+        explanation: "Adversarial prompts force the AI to simulate a critic or skeptic, overriding its default tendency to agree and flatter."
+      },
+      {
+        question: "When brainstorming, you want to explore edge cases for a database design. What prompt structure works best?",
+        options: [
+          "Act as a senior database administrator. Detail 5 ways this schema will fail under high load, specifically regarding lock contention.",
+          "Is my database schema good? Tell me everything.",
+          "Make a database schema and tell me it's perfect.",
+          "Explain database indexes."
+        ],
+        answer: 0,
+        explanation: "Specifying a high-expertise persona and asking for targeted failure modes under a specific scenario extracts high-value feedback."
+      },
+      {
+        question: "The AI Operator Method suggests that the user should act as the \"Director\" and the AI as the \"Doer/Enabler\". What does this imply for the Brainstorm phase?",
+        options: [
+          "The user does no work at all and lets the AI make all decisions.",
+          "The user directs the exploration by setting boundaries, prompting for critical review, and deciding on the path.",
+          "The user writes all the copy and the AI checks for typos.",
+          "The user must write python code to direct the AI."
+        ],
+        answer: 1,
+        explanation: "The Director guides the strategic focus and maintains the boundaries while leveraging the AI to generate options, critique, and structure."
+      },
+      {
+        question: "You want to challenge a market entry plan. What technique helps you find blind spots?",
+        options: [
+          "Ask the model to write a marketing slogan.",
+          "Instruct the model to roleplay as a hostile competitor responding to your launch.",
+          "Ask the model for a list of general marketing definitions.",
+          "Ask the model to translate the plan into French."
+        ],
+        answer: 1,
+        explanation: "Competitive roleplaying (e.g. Red Teaming) forces the AI to simulate realistic counter-strategies, highlighting hidden vulnerabilities in your plan."
+      },
+      {
+        question: "During a brainstorm, you notice the AI is agreeing with your flawed logic because you stated it confidently. What is the best immediate course of action?",
+        options: [
+          "Open a new chat, paste the logic neutrally without expressing your opinion, and ask for a critical evaluation.",
+          "Continue in the same chat and apologize to the model.",
+          "Tell the model that it is wrong and demand it agree with your new opinion.",
+          "Stop using AI for this task."
+        ],
+        answer: 0,
+        explanation: "Starting fresh and removing your biased phrasing is the fastest way to reset the model's sycophantic tendency."
+      },
+      {
+        question: "You need to write an article. You want to avoid the \"Tyranny of the Average\" (bland, cliché-ridden writing style). What is a key step?",
+        options: [
+          "Use a prompt like 'Write an amazing, mind-blowing, revolutionary article.'",
+          "Provide positive style references (samples) and a negative style guide (banned clichés and jargon).",
+          "Ask the model to search the web for the most popular articles.",
+          "Let it write the draft, and then translate it back and forth between languages."
+        ],
+        answer: 1,
+        explanation: "Clean style models require clear positive boundaries (what to do) and negative style guides (what clichés, metaphors, and formatting to avoid)."
+      },
+      {
+        question: "What is the purpose of \"Locking the Narrative\" before formatting or polishing in the Draft phase?",
+        options: [
+          "It saves bandwidth on your internet connection.",
+          "It ensures the content, arguments, and structure are correct before spending energy on layout and final prose.",
+          "It prevents the model from generating text.",
+          "It encrypts the text for security purposes."
+        ],
+        answer: 1,
+        explanation: "Separating narrative outlines from final output formatting prevents waste. Editing structure is much easier when you aren't fighting style details."
+      },
+      {
+        question: "You want to avoid typical \"AI writing signatures\" (e.g., \"in today's digital landscape,\" \"delve,\" \"testament to,\" em-dashes in every sentence). What is this resource called?",
+        options: [
+          "A brand template.",
+          "A negative style guide.",
+          "An API instruction sheet.",
+          "A context folder."
+        ],
+        answer: 1,
+        explanation: "A negative style guide explicitly bans common LLM clichés and stylistic ticks to force the model into cleaner, more human-like prose."
+      },
+      {
+        question: "What is \"Premature Formatting\" in the Draft phase?",
+        options: [
+          "Styling the output in HTML/CSS before the text is written.",
+          "The model generating tables, bullet points, or markdown headers before the logical flow of the arguments is approved.",
+          "Formatting your hard drive before using AI.",
+          "Setting the font size of the editor too early."
+        ],
+        answer: 1,
+        explanation: "Jumping into bullet points and nice formatting early hides weak logical arguments and makes structural changes harder."
+      },
+      {
+        question: "When drafting a speech, the model outputs paragraphs filled with adjectives like \"dynamic,\" \"passionate,\" and \"groundbreaking.\" What is the best way to correct this?",
+        options: [
+          "Ask it to rewrite using 'show, don't tell' guidelines, stripping adjectives in favor of concrete facts.",
+          "Tell the model it is a bad writer.",
+          "Ask it to make the speech longer.",
+          "Ask it to add more exclamation marks."
+        ],
+        answer: 0,
+        explanation: "Instructing the model to focus on raw verbs, nouns, and concrete facts rather than abstract adjectives removes standard AI fluff."
+      },
+      {
+        question: "You review a draft and notice it reads like an academic textbook. What did you fail to provide in the Gather/Draft phase?",
+        options: [
+          "A list of sources.",
+          "A personal voice guide or writing samples representing the target tone.",
+          "The email addresses of the recipients.",
+          "The length constraint."
+        ],
+        answer: 1,
+        explanation: "Models default to an average, academic tone unless anchored by concrete writing samples that demonstrate voice, pacing, and vocabulary."
+      },
+      {
+        question: "Why should you ask the model to generate a raw markdown outline first, rather than a full document?",
+        options: [
+          "Markdown outline is faster to read and edit for logical flow, structural alignment, and hierarchy.",
+          "Markdown is the only language the model understands.",
+          "Outlines consume more tokens and increase accuracy.",
+          "Outlines are easier to share on social media."
+        ],
+        answer: 0,
+        explanation: "Reviewing a high-level structure allows you to modify the flow of ideas before the model commits to thousands of words of prose."
+      },
+      {
+        question: "A \"banned words list\" is a typical component of:",
+        options: [
+          "A negative style guide.",
+          "A database schema.",
+          "A security firewall.",
+          "A context window limit."
+        ],
+        answer: 0,
+        explanation: "Negative style guides use banned words lists (like 'delve', 'tapestry', 'moreover') to block the model from using obvious AI vocabulary."
+      },
+      {
+        question: "How can you force Claude to write in a concise, punchy style?",
+        options: [
+          "Prompt it: 'Write a short summary.'",
+          "Prompt it: 'Use short sentences. Avoid passive voice. Target a 6th-grade reading level. Remove 30% of unnecessary words.'",
+          "Use capital letters: 'BE CONCISE!'",
+          "Limit the max tokens to 50 in the API settings."
+        ],
+        answer: 1,
+        explanation: "Specific, structural constraints (sentence length, active voice, editing rules) are far more effective than generic adjectives."
+      },
+      {
+        question: "You review a draft and want to rearrange the sections. What is the most efficient way to communicate this to the model?",
+        options: [
+          "Re-write the entire document yourself.",
+          "Give feedback on the outline level: 'Move Section 3 to Section 1, and expand on the second bullet.'",
+          "Ask the model to 'make it flow better.'",
+          "Start a new chat from scratch."
+        ],
+        answer: 1,
+        explanation: "Pointing to specific sections of an outline or structure makes it easy for the model to execute precise modifications."
+      },
+      {
+        question: "What is the definition of \"Hallucination\" in Large Language Models?",
+        options: [
+          "The model failing to respond to a prompt.",
+          "The model confidently generating false or fabricated claims, links, or facts.",
+          "The model using bad formatting in its output.",
+          "The model running out of memory."
+        ],
+        answer: 1,
+        explanation: "Hallucinations occur when a model predicts text that is grammatically correct but factually incorrect or unsupported by the training data or context."
+      },
+      {
+        question: "How do you enforce \"Grounding\" during the Build phase?",
+        options: [
+          "Ask the model to promise that it is telling the truth.",
+          "Limit the output to rely strictly on facts directly cited from the uploaded source documents.",
+          "Use a web search for every question.",
+          "Grounding is handled automatically by the browser."
+        ],
+        answer: 1,
+        explanation: "Grounding requires the model to anchor its generation strictly in provided reference texts, reducing the chance of hallucination."
+      },
+      {
+        question: "You want Claude to write a software guide. To prevent the model from referencing outdated libraries, what must you keep in mind?",
+        options: [
+          "The model's training cutoff date.",
+          "The model's temperature setting.",
+          "The size of your computer monitor.",
+          "The name of the programming language."
+        ],
+        answer: 0,
+        explanation: "LLMs do not know about events or library updates that occurred after their training data cutoff, unless provided via web search or uploaded documentation."
+      },
+      {
+        question: "When generating a final report, what is a powerful prompt constraint to check for factual accuracy?",
+        options: [
+          "Check your work.",
+          "Cite the exact page number or paragraph for every claim you make from the sources.",
+          "Make sure this is 100% true.",
+          "Use professional formatting."
+        ],
+        answer: 1,
+        explanation: "Demanding strict source citation forces the model to verify each statement against the context, making hallucinations easy to spot."
+      },
+      {
+        question: "In the Build phase, you want the model to generate a clean table. How should you structure your data template?",
+        options: [
+          "Tell the model to make it look nice.",
+          "Provide a markdown template showing the exact columns, headers, and an example row of data.",
+          "Do not provide a template; let the model decide the columns.",
+          "Upload a screenshot of a table."
+        ],
+        answer: 1,
+        explanation: "Providing a structural template (Shape) ensures the model maps the raw details (Substance) into the correct layout without guessing."
+      },
+      {
+        question: "If a model is asked to summarize a document and states \"The author says X\" when the document says Y, what failure mode is this?",
+        options: [
+          "Sycophancy.",
+          "Hallucination / Grounding Failure.",
+          "Tyranny of the Average.",
+          "Overeager Intern."
+        ],
+        answer: 1,
+        explanation: "Factual misrepresentation of provided context is a grounding failure, often caused by the model relying on pre-training associations over the active context."
+      },
+      {
+        question: "You are generating code using Claude. What is the most effective way to ensure the output works?",
+        options: [
+          "Ask Claude: 'Are you sure this code runs?'",
+          "Instruct the model to write unit tests alongside the code, and run verification scripts in your development environment.",
+          "Assume the code is correct if it compiles without syntax highlighting errors.",
+          "Ask a different model to look at the code."
+        ],
+        answer: 1,
+        explanation: "The Build & Verify phase requires active external verification (compiling, running tests, manual checking) rather than blind trust in the model's assertions."
+      },
+      {
+        question: "How can you prevent a model from generating generic placeholder text (like \"// implement logic here\") in code or reports?",
+        options: [
+          "Ask it to write a short script.",
+          "Enforce a 'No Placeholders' rule: instruct the model to write out all files completely without omitting any sections.",
+          "Use a model with a larger context window.",
+          "Pay for a premium subscription."
+        ],
+        answer: 1,
+        explanation: "Explicitly banning placeholders and demanding complete files forces the model to write full code blocks or sections instead of leaving shorthand markers."
+      },
+      {
+        question: "You want to verify a set of calculations. What is a recommended approach?",
+        options: [
+          "Ask the model to calculate it in a single step.",
+          "Force the model to use Chain of Thought (showing step-by-step math) or write a Python script to compute the result.",
+          "Trust the first number the model outputs.",
+          "Do the math in your head."
+        ],
+        answer: 1,
+        explanation: "LLMs are not native calculators. Forcing them to output step-by-step reasoning or execute code yields far higher mathematical accuracy."
+      },
+      {
+        question: "What is the final step in the \"Build & Verify\" phase?",
+        options: [
+          "Copying the output immediately into production.",
+          "A skeptical, human-in-the-loop review of the facts, citations, and functional performance.",
+          "Generating a certificate of completion.",
+          "Starting a new chat to celebrate."
+        ],
+        answer: 1,
+        explanation: "An operator always verifies outputs. The final step is validation, checking that constraints are met, facts are true, and formats are correct."
+      },
+      {
+        question: "You notice that after a long troubleshooting session, Claude begins suggesting code fixes that you already rejected or solved. What is happening?",
+        options: [
+          "The model's servers are experiencing high traffic.",
+          "Context Rot / Thread Degradation.",
+          "The model is trying to annoy you.",
+          "A browser cookie has expired."
+        ],
+        answer: 1,
+        explanation: "Very long conversation history overflows the model's active attention window, causing it to lose track of earlier constraints or resolutions."
+      },
+      {
+        question: "How do you fix \"Context Rot\" or \"Thread Rot\" in an active session?",
+        options: [
+          "Refresh your browser page.",
+          "Compact the session state (files and progress) and start a fresh, clean chat thread with this state.",
+          "Write a long prompt explaining that you are frustrated.",
+          "Delete the chat history from your sidebar."
+        ],
+        answer: 1,
+        explanation: "Starting a clean thread resets the context window, removing noisy history and allowing the model's reasoning capabilities to function at 100%."
+      },
+      {
+        question: "What is \"Attention Decay\" in long LLM context windows?",
+        options: [
+          "The user getting tired of reading the AI responses.",
+          "The model's tendency to miss details located in the middle of extremely long documents or chat histories.",
+          "The AI model's servers shutting down.",
+          "The speed of generation slowing down over time."
+        ],
+        answer: 1,
+        explanation: "Models often struggle to recall details placed in the middle of a massive context window (referred to as 'lost in the middle')."
+      },
+      {
+        question: "What is the most effective way to process 10 large PDF documents without causing Attention Decay?",
+        options: [
+          "Upload all 10 PDFs to a single chat thread.",
+          "Run the documents through a parallel processing pipeline (e.g., summarizing each in a clean thread, then merging the summaries).",
+          "Convert the PDFs into images and upload them.",
+          "Ask the model to read them one sentence at a time."
+        ],
+        answer: 1,
+        explanation: "Parallel execution keeps the context window per chat small, ensuring high recall accuracy for each individual document."
+      },
+      {
+        question: "Which of the following describes \"Thread Hygiene\"?",
+        options: [
+          "Deleting old chats to keep your workspace clean.",
+          "Managing your prompt threads by starting new ones when tasks shift or context becomes congested.",
+          "Cleaning your keyboard and mouse.",
+          "Using a private VPN while accessing AI tools."
+        ],
+        answer: 1,
+        explanation: "Thread hygiene is the practice of keeping chats short, single-purposed, and clean, resetting threads when starting new phases."
+      },
+      {
+        question: "You are debugging an error. The model fixes the error but introduces a new one. What is the best way to handle this loop?",
+        options: [
+          "Continue typing 'fix this' in the same thread.",
+          "Start a new thread, upload the original code, the error message, and the proposed fix, and ask for a clean resolution.",
+          "Revert to your manual code and give up.",
+          "Report a bug to the LLM vendor."
+        ],
+        answer: 1,
+        explanation: "Fresh threads clear out the history of failed attempts, which often confuse the model's pattern matching."
+      },
+      {
+        question: "Why does model reasoning degrade as a chat history grows very long?",
+        options: [
+          "The model consumes more RAM on your computer.",
+          "The model has to process more distraction/noise in its context, leaving fewer resources for core reasoning.",
+          "The API connection becomes unstable.",
+          "The server resets the connection."
+        ],
+        answer: 1,
+        explanation: "Every token in the history is processed. When the history is cluttered with outdated code or brainstorming, attention is distracted."
+      },
+      {
+        question: "What is a \"Seed\" in the context of pipeline operations?",
+        options: [
+          "A random number used for generation.",
+          "The clean, structured output of a previous chat used as the starting context for a new chat.",
+          "The first word in a prompt.",
+          "A secure API password."
+        ],
+        answer: 1,
+        explanation: "Seeding is passing the verified artifact from one stage (e.g. an approved outline) as the foundation input for the next stage's clean chat."
+      },
+      {
+        question: "You need to update a codebase file. If you upload the entire repo to a general chat, what threat do you face?",
+        options: [
+          "Premature formatting.",
+          "Attention decay and instruction degradation.",
+          "Sycophancy.",
+          "Knowledge Cutoff."
+        ],
+        answer: 1,
+        explanation: "Uploading an entire repository when only a few files are needed introduces massive context noise, causing the model to lose track of specific constraints."
+      },
+      {
+        question: "What is the golden rule of Thread Management?",
+        options: [
+          "Keep a single thread open for as long as possible.",
+          "One thread, one clear goal. When the goal shifts, open a new thread.",
+          "Always close your browser after every prompt.",
+          "Never use the same system prompt twice."
+        ],
+        answer: 1,
+        explanation: "Limiting each thread to a single discrete goal keeps the context pristine, optimizes reasoning speed, and prevents thread rot."
       }
     ];
 
+    let quizQuestions = [];
     let currentQuestionIdx = 0;
-    let selectedAnswers = Array(quizQuestions.length).fill(null);
+    let selectedAnswers = [];
     let quizCompleted = false;
+
+    function getRandomQuestions(pool, count) {
+      const shuffled = [...pool].sort(() => 0.5 - Math.random());
+      return shuffled.slice(0, count);
+    }
+
+    function initQuiz() {
+      quizQuestions = getRandomQuestions(allQuizQuestions, 10);
+      selectedAnswers = Array(quizQuestions.length).fill(null);
+      currentQuestionIdx = 0;
+      quizCompleted = false;
+    }
 
     // Track Read Progress
     const readSections = new Set();
@@ -2835,6 +3343,7 @@
        ================================================================== */
     document.addEventListener('DOMContentLoaded', () => {
       // Initialize Quiz
+      initQuiz();
       renderQuestion();
       
       // Setup Navigation active link behavior
@@ -3179,9 +3688,7 @@ Ask your multiple choice questions now.`;
     }
 
     function restartQuiz() {
-      currentQuestionIdx = 0;
-      selectedAnswers = Array(quizQuestions.length).fill(null);
-      quizCompleted = false;
+      initQuiz();
       
       document.getElementById('quizContent').style.display = 'block';
       document.querySelector('.quiz-nav').style.display = 'flex';
