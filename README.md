@@ -1,10 +1,10 @@
-# Claude Co-Work Workshop 🛠️
+# Claude Co-Work Workshop
 
 Welcome to the **Claude Co-Work Workshop**! This repository features an interactive, comprehensive course that combines the strategic **AI Operator Method** with a detailed diagnostics guide to **AI Limitations**.
 
 ---
 
-## 📚 Unified Workshop (`index.html`)
+## Unified Workshop (`index.html`)
 
 Instead of viewing the files in isolation, open [index.html](file:///Users/jayvicsanantonio/Developer/claude-cowork-workshop/index.html) in your web browser. It hosts a cohesive learning curriculum, structured as follows:
 
@@ -31,7 +31,7 @@ We map the **8 Failure Modes** from the AI Field Guide directly to the **4 Phase
 
 ---
 
-## 🚀 Getting Started
+## Getting Started
 
 Simply open `index.html` directly in your browser:
 * Double-click [index.html](file:///Users/jayvicsanantonio/Developer/claude-cowork-workshop/index.html) from your file explorer.
@@ -39,7 +39,7 @@ Simply open `index.html` directly in your browser:
 
 ---
 
-## 🛠️ Design & Tech Stack
+## Design & Tech Stack
 
 * Dark-mode aesthetics with glassmorphic cards (`backdrop-filter`).
 * Font pairing: *Fraunces* (editorial headers), *Outfit/DM Sans* (UI and body), and *JetBrains Mono* (prompts and code).
