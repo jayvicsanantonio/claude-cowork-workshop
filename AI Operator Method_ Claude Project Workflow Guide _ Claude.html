@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The AI Operator Method — Project Kickoff Prompt</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#16130E;
+    --bg-2:#1C1812;
+    --card:#211C15;
+    --card-2:#262017;
+    --border:#37301F;
+    --border-soft:#2C2619;
+    --text:#EDE7DA;
+    --muted:#A69C88;
+    --faint:#736B5B;
+    --coral:#D97757;
+    --coral-soft:#E89274;
+    --amber:#E0A458;
+    --green:#82A982;
+    --shadow:0 24px 60px -28px rgba(0,0,0,.7);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    background:var(--bg);
+    color:var(--text);
+    font-family:'DM Sans',sans-serif;
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+    background-image:
+      radial-gradient(900px 500px at 12% -8%, rgba(217,119,87,.10), transparent 60%),
+      radial-gradient(800px 460px at 92% 4%, rgba(224,164,88,.07), transparent 60%);
+    background-attachment:fixed;
+  }
+  .wrap{max-width:880px;margin:0 auto;padding:0 24px}
+
+  /* ---- header ---- */
+  header{padding:84px 0 30px;text-align:center}
+  .eyebrow{
+    font-family:'JetBrains Mono',monospace;
+    font-size:12px;letter-spacing:.22em;text-transform:uppercase;
+    color:var(--coral);margin-bottom:22px;
+    display:inline-flex;align-items:center;gap:10px;
+  }
+  .eyebrow::before,.eyebrow::after{content:"";width:26px;height:1px;background:var(--border)}
+  h1{
+    font-size:clamp(38px,6.5vw,62px);
+    font-weight:700;line-height:1.04;letter-spacing:-.02em;
+    margin-bottom:20px;
+  }
+  h1 .accent{color:var(--coral)}
+  .lede{
+    font-size:clamp(17px,2.4vw,20px);color:var(--muted);
+    max-width:620px;margin:0 auto;
+  }
+
+  /* ---- flow diagram ---- */
+  .flow-section{padding:46px 0 16px}
+  .section-label{
+    font-family:'JetBrains Mono',monospace;font-size:12px;
+    letter-spacing:.18em;text-transform:uppercase;color:var(--faint);
+    text-align:center;margin-bottom:30px;
+  }
+  .flow{
+    display:grid;grid-template-columns:repeat(4,1fr);
+    gap:14px;align-items:stretch;position:relative;
+  }
+  .node{
+    background:var(--card);border:1px solid var(--border-soft);
+    border-radius:16px;padding:22px 18px 20px;text-align:left;
+    position:relative;transition:transform .25s ease,border-color .25s ease;
+  }
+  .node:hover{transform:translateY(-4px);border-color:var(--c)}
+  .node .num{
+    font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:600;
+    color:var(--c);display:flex;align-items:center;gap:8px;margin-bottom:14px;
+  }
+  .node .dot{width:9px;height:9px;border-radius:50%;background:var(--c);box-shadow:0 0 0 4px color-mix(in srgb,var(--c) 18%,transparent)}
+  .node h3{font-size:18px;font-weight:600;margin-bottom:8px;letter-spacing:-.01em}
+  .node p{font-size:13.5px;color:var(--muted);line-height:1.5}
+  .node::after{
+    content:"→";position:absolute;right:-13px;top:50%;
+    transform:translateY(-50%);color:var(--faint);font-size:18px;z-index:2;
+    font-family:'JetBrains Mono',monospace;
+  }
+  .node:last-child::after{display:none}
+  .n1{--c:var(--coral)} .n2{--c:var(--amber)} .n3{--c:var(--green)} .n4{--c:var(--coral-soft)}
+
+  /* ---- prose blocks ---- */
+  .block{padding:50px 0 8px}
+  .block h2{
+    font-size:clamp(24px,3.6vw,30px);font-weight:700;letter-spacing:-.02em;
+    margin-bottom:14px;
+  }
+  .block h2 .mark{color:var(--coral)}
+  .block p{color:var(--muted);font-size:16px;max-width:680px}
+  .block p + p{margin-top:12px}
+  .block strong{color:var(--text);font-weight:600}
+
+  /* ---- prompt card ---- */
+  .prompt-card{
+    background:var(--bg-2);border:1px solid var(--border);
+    border-radius:18px;overflow:hidden;margin-top:24px;box-shadow:var(--shadow);
+  }
+  .prompt-head{
+    display:flex;align-items:center;justify-content:space-between;
+    padding:14px 18px;border-bottom:1px solid var(--border-soft);
+    background:linear-gradient(180deg,rgba(255,255,255,.02),transparent);
+  }
+  .prompt-head .meta{display:flex;align-items:center;gap:10px;
+    font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--faint);letter-spacing:.04em}
+  .lights{display:flex;gap:6px}
+  .lights i{width:11px;height:11px;border-radius:50%;display:block}
+  .lights i:nth-child(1){background:#C9614A}.lights i:nth-child(2){background:#C99A4A}.lights i:nth-child(3){background:#6E8E6E}
+  .copy-btn{
+    font-family:'JetBrains Mono',monospace;font-size:12.5px;font-weight:600;
+    color:var(--bg);background:var(--coral);border:none;border-radius:8px;
+    padding:8px 16px;cursor:pointer;letter-spacing:.02em;
+    display:inline-flex;align-items:center;gap:7px;transition:background .2s ease,transform .1s ease;
+  }
+  .copy-btn:hover{background:var(--coral-soft)}
+  .copy-btn:active{transform:scale(.97)}
+  .copy-btn.done{background:var(--green);color:var(--bg)}
+  .prompt-body{
+    padding:24px 22px 26px;font-family:'JetBrains Mono',monospace;
+    font-size:13px;line-height:1.78;color:#D8D1C2;white-space:pre-wrap;
+    max-height:520px;overflow:auto;
+  }
+  .prompt-body .ph{color:var(--amber)}
+  .prompt-body .ph-head{color:var(--coral-soft);font-weight:600}
+  .tip{
+    margin-top:16px;font-size:14px;color:var(--faint);
+    border-left:2px solid var(--border);padding-left:14px;max-width:680px;
+  }
+  .tip b{color:var(--muted);font-weight:600}
+
+  /* ---- inventory ---- */
+  .inv-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-top:26px}
+  .inv{
+    background:var(--card);border:1px solid var(--border-soft);
+    border-radius:14px;padding:20px 20px 18px;transition:border-color .2s ease,transform .2s ease;
+  }
+  .inv:hover{border-color:var(--ic);transform:translateY(-3px)}
+  .inv .tag{
+    font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:.14em;
+    text-transform:uppercase;color:var(--ic);margin-bottom:10px;display:inline-block;
+  }
+  .inv h4{font-size:16px;font-weight:600;margin-bottom:6px;letter-spacing:-.01em}
+  .inv p{font-size:13.5px;color:var(--muted);line-height:1.5}
+  .inv .eg{display:block;margin-top:9px;font-size:12px;color:var(--faint);font-style:italic}
+  .ic-coral{--ic:var(--coral)} .ic-amber{--ic:var(--amber)} .ic-green{--ic:var(--green)}
+
+  footer{padding:60px 0 70px;text-align:center;color:var(--faint);
+    font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.06em}
+  footer span{color:var(--coral)}
+
+  @media(max-width:720px){
+    .flow{grid-template-columns:1fr;gap:30px}
+    .node::after{content:"↓";right:50%;top:auto;bottom:-24px;transform:translateX(50%)}
+    .inv-grid{grid-template-columns:1fr}
+    header{padding:60px 0 20px}
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+  <header>
+    <span class="eyebrow">Claude Project Playbook</span>
+    <h1>The AI <span class="accent">Operator</span> Method</h1>
+    <p class="lede">A four-step rhythm for turning a folder of context into a repeatable Claude workflow that does real work, the same way, every time.</p>
+  </header>
+
+  <section class="flow-section">
+    <div class="section-label">The Loop</div>
+    <div class="flow">
+      <div class="node n1">
+        <div class="num"><span class="dot"></span>01</div>
+        <h3>Gather</h3>
+        <p>Pull together the templates, data, voice, and examples Claude needs to do the job.</p>
+      </div>
+      <div class="node n2">
+        <div class="num"><span class="dot"></span>02</div>
+        <h3>Brainstorm</h3>
+        <p>Think out loud with Claude as a strategy partner before committing to a direction.</p>
+      </div>
+      <div class="node n3">
+        <div class="num"><span class="dot"></span>03</div>
+        <h3>Draft</h3>
+        <p>Lock the narrative in plain text and approve it before a single slide gets built.</p>
+      </div>
+      <div class="node n4">
+        <div class="num"><span class="dot"></span>04</div>
+        <h3>Build</h3>
+        <p>Hand the approved plan to the template and ship the finished artifact.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="block">
+    <h2>Where this prompt <span class="mark">fits in</span></h2>
+    <p>Once you finish the <strong>Gather</strong> step and have your ingredients dropped into a Claude Project, you need to show Claude the work and get it pointed in the right direction.</p>
+    <p>The prompt below does that. Paste it as the <strong>first message</strong> in a brand-new project. Claude looks around at the context you collected, then interviews you with smart questions before it writes anything. The result is project instructions tuned to your work, not a guess.</p>
+    <p>This example is built for a monthly investor update deck. Swap the inputs and it works for any recurring deliverable you run through a template.</p>
+
+    <div class="prompt-card">
+      <div class="prompt-head">
+        <div class="meta"><span class="lights"><i></i><i></i><i></i></span> first-message.txt</div>
+        <button class="copy-btn" id="copyBtn" onclick="copyPrompt()">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          <span id="copyLabel">Copy prompt</span>
+        </button>
+      </div>
+      <div class="prompt-body" id="promptText">You're helping me build the project instructions for this Claude Project. The goal is a repeatable workflow that produces my <span class="ph">monthly investor update deck</span> accurately and on brand, every single time.
+
+Start by looking around this project. I've gathered the inputs you'll need:
+- Last month's deck (the <span class="ph">template</span> to match)
+- A cheat sheet on what my <span class="ph">investors</span> care about
+- My brand voice guide
+- This month's raw source data (<span class="ph">CRM, revenue, runway</span>)
+
+Before you write a single line of instructions, interview me with a series of smart multiple choice questions so we land on the same page about what these instructions need to cover.
+
+When you write the instructions, set up a four phase workflow:
+
+<span class="ph-head">GATHER</span>
+Always confirm I've collected every input the deck needs. The asks from my last <span class="ph">investor call</span>, deal data, revenue and runway numbers, and any other updates. Handle paste-ins. Validate I have everything before moving forward.
+
+<span class="ph-head">BRAINSTORM</span>
+Be a strategy partner, not a yes-man. Use the cheat sheet and how I've done this before. Surface blind spots, push back, and help me focus on the right amount for a <span class="ph">five slide</span> update. Act a little like one of my investors.
+
+<span class="ph-head">DRAFT</span>
+Output only the narrative for each slide as plain text in chat. The core story and key data points per slide. Wait for my approval before you build anything.
+
+<span class="ph-head">BUILD</span>
+Once I approve the narrative, build the deck from the template and follow the brand voice.
+
+Also analyze the template and propose a loose schema this project should synthesize content into. The finished deck is always exactly <span class="ph">five slides</span>.
+
+Ask your multiple choice questions now.</div>
+    </div>
+    <p class="tip"><b>Pro tip.</b> Keep the Build step inside the instructions for now. Once the workflow proves itself, ask Claude in a separate chat to spin the build phase out into a reusable skill that generates the final file on command.</p>
+  </section>
+
+  <section class="block">
+    <h2>What to put in <span class="mark">the folder</span></h2>
+    <p>The Operator Method is only as good as the Gather step. These are the context files worth collecting and curating before you start a Claude Project. Aim for a few strong files in each category, not a dump of everything.</p>
+
+    <div class="inv-grid">
+      <div class="inv ic-coral">
+        <span class="tag">The Shape</span>
+        <h4>Templates</h4>
+        <p>The exact file and format you want filled in, so output matches structure on the first try.</p>
+        <span class="eg">e.g. last month's .pptx, a doc skeleton</span>
+      </div>
+      <div class="inv ic-coral">
+        <span class="tag">The Shape</span>
+        <h4>Reference examples</h4>
+        <p>One or two finished pieces that landed well. Claude pattern-matches quality from these.</p>
+        <span class="eg">e.g. the update investors praised</span>
+      </div>
+      <div class="inv ic-amber">
+        <span class="tag">The Voice</span>
+        <h4>Brand and style guide</h4>
+        <p>How things should sound and look so the output reads like you, not generic AI.</p>
+        <span class="eg">e.g. tone rules, words to avoid</span>
+      </div>
+      <div class="inv ic-amber">
+        <span class="tag">The Voice</span>
+        <h4>Decision cheat sheet</h4>
+        <p>What your audience cares about and how you prioritize. Fuels the brainstorm phase.</p>
+        <span class="eg">e.g. what your investors push on</span>
+      </div>
+      <div class="inv ic-green">
+        <span class="tag">The Substance</span>
+        <h4>Source data</h4>
+        <p>The raw inputs that change each cycle. Exports, numbers, and metrics to pull from.</p>
+        <span class="eg">e.g. CRM export, revenue, runway</span>
+      </div>
+      <div class="inv ic-green">
+        <span class="tag">The Substance</span>
+        <h4>Stakeholder asks</h4>
+        <p>Specific requests from named people so nothing requested last time gets dropped.</p>
+        <span class="eg">e.g. the follow-ups from your last call</span>
+      </div>
+      <div class="inv ic-coral">
+        <span class="tag">The Guardrails</span>
+        <h4>Hard constraints</h4>
+        <p>Non-negotiable rules on length, count, or format that the output must always honor.</p>
+        <span class="eg">e.g. exactly five slides, no jargon</span>
+      </div>
+      <div class="inv ic-amber">
+        <span class="tag">The Guardrails</span>
+        <h4>Process notes</h4>
+        <p>How you've done this before and what you learned. Saves repeating the same direction.</p>
+        <span class="eg">e.g. lessons from past months</span>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    Built with the <span>AI Operator Method</span> &nbsp;·&nbsp; Gather → Brainstorm → Draft → Build
+  </footer>
+
+</div>
+
+<script>
+  function copyPrompt(){
+    var el = document.getElementById('promptText');
+    var text = el.innerText.replace(/\u00a0/g,' ');
+    var btn = document.getElementById('copyBtn');
+    var label = document.getElementById('copyLabel');
+    navigator.clipboard.writeText(text).then(function(){
+      btn.classList.add('done');
+      label.textContent = 'Copied';
+      setTimeout(function(){ btn.classList.remove('done'); label.textContent = 'Copy prompt'; }, 1900);
+    }).catch(function(){
+      var r = document.createRange(); r.selectNode(el);
+      var s = window.getSelection(); s.removeAllRanges(); s.addRange(r);
+      try{ document.execCommand('copy'); label.textContent='Copied'; setTimeout(function(){label.textContent='Copy prompt';},1900);}catch(e){}
+      s.removeAllRanges();
+    });
+  }
+</script>
+</body>
+</html>
