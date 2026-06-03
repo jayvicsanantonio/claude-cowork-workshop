@@ -1,0 +1,3195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <!-- SEO Best Practices -->
+  <title>The AI Operator Workshop & Limitations Field Guide</title>
+  <meta name="description" content="A comprehensive, interactive masterclass combining the strategic AI Operator Method with a diagnostic field guide to LLM limitations. Learn to build repeatable workflows and safeguard against failure modes.">
+  
+  <!-- Typography & Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Fraunces:ital,opsz,wght@0,9..144,100..900;1,9..144,100..900&family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&family=Outfit:wght@100..900&display=swap" rel="stylesheet">
+  
+  <style>
+    /* ==================================================================
+       1. DESIGN SYSTEM & VARIABLES
+       ================================================================== */
+    :root {
+      --bg: #0d0a08;
+      --bg-card: #15110e;
+      --bg-card-hover: #1e1915;
+      --bg-sidebar: #110e0b;
+      
+      --text: #f3ede4;
+      --text-muted: #a69c8c;
+      --text-faint: #70685b;
+      
+      --border: #262019;
+      --border-hover: #383026;
+      --border-focus: #d97757;
+      
+      --coral: #d97757;
+      --coral-soft: #e89274;
+      --coral-glow: rgba(217, 119, 87, 0.15);
+      
+      --teal: #5c7f8c;
+      --teal-soft: #7ea3b0;
+      --teal-glow: rgba(92, 127, 140, 0.15);
+      
+      --amber: #e0a458;
+      --amber-glow: rgba(224, 164, 88, 0.15);
+      
+      --green: #82a982;
+      --green-glow: rgba(130, 169, 130, 0.15);
+      
+      --red: #c9614a;
+      --red-glow: rgba(201, 97, 74, 0.15);
+      
+      --shadow: 0 16px 40px -12px rgba(0, 0, 0, 0.8);
+      --font-serif: 'Fraunces', serif;
+      --font-sans: 'Outfit', 'DM Sans', sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+      
+      --sidebar-w: 280px;
+      --transition: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    /* Reset & Base Stylings */
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; font-size: 16px; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-sans);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      background-image:
+        radial-gradient(900px 500px at 0% 0%, var(--coral-glow), transparent 60%),
+        radial-gradient(800px 460px at 100% 100%, var(--teal-glow), transparent 60%);
+      background-attachment: fixed;
+      display: flex;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    a { color: inherit; text-decoration: none; transition: var(--transition); }
+    button, input, select, textarea { font-family: inherit; color: inherit; }
+    
+    /* Scrollbars */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--text-faint); }
+
+    /* ==================================================================
+       2. LAYOUT SKELETON
+       ================================================================== */
+    
+    /* Sidebar Navigation */
+    .sidebar {
+      width: var(--sidebar-w);
+      background: var(--bg-sidebar);
+      border-right: 1px solid var(--border);
+      position: fixed;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      z-index: 100;
+      display: flex;
+      flex-direction: column;
+      padding: 2rem 1.5rem;
+      overflow-y: auto;
+      transition: transform var(--transition);
+    }
+    
+    .sidebar-brand {
+      margin-bottom: 2rem;
+    }
+    .brand-eyebrow {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--coral);
+      display: block;
+      margin-bottom: 4px;
+    }
+    .brand-title {
+      font-family: var(--font-serif);
+      font-size: 1.5rem;
+      font-weight: 500;
+      letter-spacing: -0.02em;
+      color: var(--text);
+    }
+    .brand-title span { font-style: italic; color: var(--teal); }
+
+    /* Progress Tracker */
+    .progress-widget {
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1rem;
+      margin-bottom: 1.5rem;
+    }
+    .progress-header {
+      display: flex;
+      justify-content: space-between;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+    }
+    .progress-bar {
+      height: 4px;
+      background: var(--border);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+    .progress-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, var(--coral), var(--teal));
+      transition: width var(--transition);
+    }
+
+    /* Solutions Search */
+    .search-box {
+      position: relative;
+      margin-bottom: 1.5rem;
+    }
+    .search-input {
+      width: 100%;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 0.6rem 1rem 0.6rem 2.2rem;
+      font-size: 13.5px;
+      transition: var(--transition);
+    }
+    .search-input:focus {
+      border-color: var(--coral);
+      background: rgba(255, 255, 255, 0.05);
+      outline: none;
+    }
+    .search-box svg {
+      position: absolute;
+      left: 0.8rem;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 14px;
+      height: 14px;
+      color: var(--text-faint);
+      pointer-events: none;
+    }
+
+    /* Navigation Links */
+    .nav-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+    }
+    .nav-header {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text-faint);
+      margin: 1rem 0 0.4rem;
+      padding-left: 0.5rem;
+    }
+    .nav-item a {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 0.5rem 0.75rem;
+      border-radius: 8px;
+      font-size: 14px;
+      color: var(--text-muted);
+    }
+    .nav-item a:hover {
+      color: var(--text);
+      background: rgba(255, 255, 255, 0.02);
+    }
+    .nav-item.active a {
+      color: var(--text);
+      background: var(--coral-glow);
+      font-weight: 500;
+      box-shadow: inset 2px 0 0 var(--coral);
+    }
+    .nav-item.limit.active a {
+      background: var(--teal-glow);
+      box-shadow: inset 2px 0 0 var(--teal);
+    }
+    .nav-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--text-faint);
+      transition: var(--transition);
+    }
+    .nav-item.active .nav-dot { background: var(--coral); }
+    .nav-item.limit.active .nav-dot { background: var(--teal); }
+
+    /* Main Container */
+    .main-content {
+      margin-left: var(--sidebar-w);
+      flex: 1;
+      padding: 3rem 4rem;
+      max-width: 1000px;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Mobile Header & Hamburger */
+    .mobile-topbar {
+      display: none;
+      background: var(--bg-sidebar);
+      border-bottom: 1px solid var(--border);
+      padding: 1rem 1.5rem;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 101;
+    }
+    .hamburger {
+      background: none;
+      border: none;
+      cursor: pointer;
+      width: 24px;
+      height: 24px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-around;
+    }
+    .hamburger span {
+      width: 100%;
+      height: 2px;
+      background: var(--text);
+      border-radius: 2px;
+      transition: var(--transition);
+    }
+
+    /* ==================================================================
+       3. COMPONENTS & TYPOGRAPHY
+       ================================================================== */
+    
+    /* Header / Masthead */
+    .masthead {
+      margin-bottom: 4rem;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 3rem;
+    }
+    .eyebrow {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--coral);
+      margin-bottom: 1.5rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .eyebrow::after { content: ""; width: 40px; height: 1px; background: var(--border); }
+    
+    h1 {
+      font-family: var(--font-serif);
+      font-weight: 300;
+      font-size: clamp(2.5rem, 6vw, 4.5rem);
+      line-height: 1.05;
+      letter-spacing: -0.03em;
+      margin-bottom: 1.5rem;
+    }
+    h1 span { font-style: italic; color: var(--coral); font-weight: 400; }
+    h1 em { font-style: italic; color: var(--teal); font-weight: 400; }
+    
+    .lede {
+      font-family: var(--font-serif);
+      font-size: clamp(1.1rem, 2.5vw, 1.45rem);
+      font-style: italic;
+      color: var(--text-muted);
+      max-width: 720px;
+      line-height: 1.45;
+    }
+
+    /* Prose Blocks & Grid Sections */
+    .section-block {
+      padding: 5rem 0 2rem;
+      border-bottom: 1px solid var(--border);
+      scroll-margin-top: 2rem;
+    }
+    .section-block:last-of-type { border-bottom: none; }
+    
+    .section-header {
+      margin-bottom: 2.5rem;
+    }
+    .section-kicker {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--text-faint);
+      margin-bottom: 8px;
+      display: block;
+    }
+    h2 {
+      font-family: var(--font-serif);
+      font-size: clamp(1.8rem, 4vw, 2.6rem);
+      font-weight: 400;
+      letter-spacing: -0.02em;
+      line-height: 1.15;
+    }
+    h2 span { font-style: italic; color: var(--coral); }
+    h2 em { font-style: italic; color: var(--teal); }
+
+    .prose-desc {
+      font-size: 16.5px;
+      color: var(--text-muted);
+      max-width: 750px;
+      margin-bottom: 2rem;
+    }
+    .prose-desc p { margin-bottom: 1rem; }
+    .prose-desc strong { color: var(--text); font-weight: 600; }
+
+    /* Highlights / Indicators */
+    .grid-desc {
+      display: grid;
+      grid-template-columns: 1.2fr 1fr;
+      gap: 3rem;
+      margin-bottom: 2.5rem;
+      align-items: start;
+    }
+
+    /* Loop Visualizer Box */
+    .loop-visualizer {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1rem;
+      margin: 2rem 0 3.5rem;
+    }
+    .loop-node {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      position: relative;
+      transition: transform var(--transition), border-color var(--transition);
+    }
+    .loop-node:hover {
+      transform: translateY(-4px);
+      border-color: var(--node-color);
+      box-shadow: 0 12px 30px -10px var(--node-glow);
+    }
+    .loop-node .num {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--node-color);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 12px;
+    }
+    .loop-node .dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--node-color);
+      box-shadow: 0 0 0 3px var(--node-glow);
+    }
+    .loop-node h3 {
+      font-family: var(--font-serif);
+      font-size: 1.25rem;
+      font-weight: 500;
+      margin-bottom: 8px;
+    }
+    .loop-node p {
+      font-size: 13px;
+      color: var(--text-muted);
+      line-height: 1.45;
+    }
+    .loop-node::after {
+      content: "→";
+      position: absolute;
+      right: -0.65rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-faint);
+      font-family: var(--font-mono);
+      font-size: 16px;
+      z-index: 2;
+    }
+    .loop-node:last-child::after { display: none; }
+    
+    .ln-gather { --node-color: var(--coral); --node-glow: var(--coral-glow); }
+    .ln-brain { --node-color: var(--amber); --node-glow: var(--amber-glow); }
+    .ln-draft { --node-color: var(--green); --node-glow: var(--green-glow); }
+    .ln-build { --node-color: var(--teal); --node-glow: var(--teal-glow); }
+
+    /* Master Tactics Blocks */
+    .tactics-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+      margin-top: 1rem;
+    }
+    .tactic-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 2.25rem;
+      display: flex;
+      flex-direction: column;
+    }
+    .tactic-num {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: 0.05em;
+      color: var(--coral);
+      margin-bottom: 12px;
+      display: block;
+    }
+    .tactic-title {
+      font-family: var(--font-serif);
+      font-size: 1.6rem;
+      font-weight: 400;
+      margin-bottom: 4px;
+    }
+    .tactic-sub {
+      font-family: var(--font-serif);
+      font-style: italic;
+      font-size: 15px;
+      color: var(--text-muted);
+      margin-bottom: 1.5rem;
+    }
+    .tactic-diagram {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1rem;
+      margin-bottom: 1.5rem;
+    }
+    .tactic-diagram svg {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+    .tactic-body {
+      font-size: 14.5px;
+      color: var(--text-muted);
+      margin-bottom: 1.5rem;
+      flex: 1;
+    }
+    .tactic-body p { margin-bottom: 0.8rem; }
+    .tactic-body p:last-child { margin-bottom: 0; }
+    .tactic-body em { color: var(--text); font-style: normal; font-weight: 500; }
+
+    /* ==================================================================
+       4. WORKSHOP MODULES & LIMITATIONS
+       ================================================================== */
+    .module-badge {
+      display: inline-block;
+      font-family: var(--font-mono);
+      font-size: 10px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      padding: 0.3rem 0.75rem;
+      border-radius: 4px;
+      margin-bottom: 1.5rem;
+      font-weight: 600;
+    }
+    .badge-gather { background: var(--coral-glow); color: var(--coral-soft); border: 1px solid var(--coral); }
+    .badge-brain { background: var(--amber-glow); color: var(--amber); border: 1px solid var(--amber); }
+    .badge-draft { background: var(--green-glow); color: var(--green); border: 1px solid var(--green); }
+    .badge-build { background: var(--teal-glow); color: var(--teal-soft); border: 1px solid var(--teal); }
+
+    /* Context Inventory Folder Items */
+    .inventory-title {
+      font-family: var(--font-serif);
+      font-size: 1.5rem;
+      font-weight: 500;
+      margin: 2.5rem 0 1rem;
+    }
+    .inventory-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1rem;
+      margin-bottom: 3rem;
+    }
+    .inv-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      transition: border-color var(--transition);
+    }
+    .inv-card:hover { border-color: var(--inv-border); }
+    .inv-tag {
+      font-family: var(--font-mono);
+      font-size: 9.5px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--inv-color);
+      margin-bottom: 8px;
+      display: block;
+    }
+    .inv-card h4 {
+      font-size: 15.5px;
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+    .inv-card p {
+      font-size: 13px;
+      color: var(--text-muted);
+      line-height: 1.45;
+    }
+    .inv-card .example {
+      display: block;
+      margin-top: 8px;
+      font-size: 11.5px;
+      color: var(--text-faint);
+      font-style: italic;
+    }
+    .ic-shape { --inv-color: var(--coral-soft); --inv-border: var(--coral); }
+    .ic-voice { --inv-color: var(--amber); --inv-border: var(--amber); }
+    .ic-substance { --inv-color: var(--green); --inv-border: var(--green); }
+    .ic-guards { --inv-color: var(--teal-soft); --inv-border: var(--teal); }
+
+    /* Limitations Accordion Items */
+    .limitations-header {
+      border-bottom: 2px solid var(--border);
+      padding-bottom: 0.5rem;
+      margin: 3.5rem 0 1.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+    }
+    .limitations-header h3 {
+      font-family: var(--font-serif);
+      font-size: 1.6rem;
+      font-weight: 500;
+    }
+    .limitations-header .count {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--text-faint);
+    }
+
+    /* Collapse Entry Styling */
+    .entry {
+      border-bottom: 1px solid var(--border);
+    }
+    .entry-header {
+      width: 100%;
+      background: none;
+      border: none;
+      text-align: left;
+      cursor: pointer;
+      padding: 1.75rem 0;
+      display: grid;
+      grid-template-columns: 3.5rem 1fr auto;
+      gap: 1.5rem;
+      align-items: baseline;
+      transition: background-color var(--transition);
+      position: relative;
+    }
+    .entry-header:hover {
+      background-color: rgba(255, 255, 255, 0.01);
+    }
+    .entry-header::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 1.75rem;
+      width: 3px;
+      height: 0;
+      background: var(--teal);
+      transition: height var(--transition);
+    }
+    .entry[data-open="true"] .entry-header::before {
+      height: calc(100% - 3.5rem);
+    }
+    .entry-num {
+      font-family: var(--font-mono);
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--teal);
+    }
+    .entry-title-text {
+      display: block;
+      font-family: var(--font-serif);
+      font-size: 1.45rem;
+      font-weight: 400;
+      margin-bottom: 4px;
+    }
+    .entry-sub-text {
+      display: block;
+      font-size: 13.5px;
+      color: var(--text-muted);
+    }
+    .entry-meta {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    .trend {
+      font-family: var(--font-mono);
+      font-size: 9.5px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 0.25rem 0.5rem;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      color: var(--text-muted);
+      white-space: nowrap;
+    }
+    .trend.improving { color: var(--green); border-color: var(--green-glow); background: var(--green-glow); }
+    .trend.flat { color: var(--amber); border-color: var(--amber-glow); background: var(--amber-glow); }
+    .trend.worsening { color: var(--red); border-color: var(--red-glow); background: var(--red-glow); }
+    .trend.mixed { color: var(--text-muted); border-color: var(--border); }
+    
+    .toggle-icon {
+      font-family: var(--font-mono);
+      font-size: 18px;
+      font-weight: 300;
+      color: var(--teal);
+      transition: transform var(--transition);
+    }
+    .entry[data-open="true"] .toggle-icon {
+      transform: rotate(45deg);
+    }
+
+    /* Grid Template Height Expansion Trick */
+    .entry-body {
+      display: grid;
+      grid-template-rows: 0fr;
+      transition: grid-template-rows 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .entry[data-open="true"] .entry-body {
+      grid-template-rows: 1fr;
+    }
+    .entry-body-inner {
+      overflow: hidden;
+    }
+    .entry-content {
+      padding: 0.5rem 0 3rem 3.5rem;
+    }
+    
+    /* Inside Entry Details */
+    .entry-grid-detail {
+      display: grid;
+      grid-template-columns: 1.3fr 1fr;
+      gap: 3rem;
+      margin-bottom: 2.5rem;
+      align-items: start;
+    }
+    .def-block { margin-bottom: 1.5rem; }
+    .def-kicker {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--teal);
+      margin-bottom: 6px;
+      display: block;
+    }
+    .def-block p {
+      font-family: var(--font-serif);
+      font-size: 15px;
+      line-height: 1.5;
+    }
+    .looks-like {
+      border-left: 2px solid var(--teal);
+      padding-left: 1.2rem;
+    }
+    .looks-like p {
+      font-style: italic;
+      color: var(--text-muted);
+      font-size: 14px;
+    }
+    
+    .diagram-box {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem;
+    }
+    .diagram-box svg {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+    .diagram-caption {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      color: var(--text-faint);
+      margin-top: 12px;
+      padding-top: 10px;
+      border-top: 1px solid var(--border);
+      text-align: center;
+    }
+
+    /* Collapsible Solutions inside Entries */
+    .solutions-section {
+      border-top: 1px solid var(--border);
+      padding-top: 2rem;
+    }
+    .solutions-title {
+      font-family: var(--font-serif);
+      font-size: 1.25rem;
+      font-weight: 500;
+      margin-bottom: 1.25rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+    }
+    .solutions-title span {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--text-faint);
+    }
+    .solutions-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 0.75rem;
+    }
+    .solution {
+      background: rgba(255, 255, 255, 0.01);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      transition: var(--transition);
+    }
+    .solution:hover {
+      border-color: var(--border-hover);
+    }
+    .solution[data-open="true"] {
+      border-color: var(--teal);
+      background: var(--bg-card);
+    }
+    .solution-header {
+      width: 100%;
+      background: none;
+      border: none;
+      text-align: left;
+      cursor: pointer;
+      padding: 1rem 1.25rem;
+      display: grid;
+      grid-template-columns: 1.5rem 1fr auto;
+      gap: 0.75rem;
+      align-items: baseline;
+    }
+    .solution-num {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--teal);
+      font-weight: 600;
+    }
+    .sol-title-text {
+      display: block;
+      font-family: var(--font-serif);
+      font-size: 1.15rem;
+      font-weight: 500;
+      margin-bottom: 2px;
+    }
+    .sol-sub-text {
+      display: block;
+      font-size: 12.5px;
+      color: var(--text-muted);
+    }
+    .sol-toggle {
+      font-family: var(--font-mono);
+      font-size: 14px;
+      color: var(--teal);
+      transition: transform var(--transition);
+    }
+    .solution[data-open="true"] .sol-toggle {
+      transform: rotate(45deg);
+    }
+
+    .solution-body {
+      display: grid;
+      grid-template-rows: 0fr;
+      transition: grid-template-rows 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .solution[data-open="true"] .solution-body {
+      grid-template-rows: 1fr;
+    }
+    .solution-body-inner {
+      overflow: hidden;
+    }
+    .solution-content {
+      padding: 0 1.25rem 1.5rem 3.5rem;
+      border-top: 1px dotted var(--border);
+      padding-top: 1rem;
+      margin-top: 0.2rem;
+    }
+    .solution-content p {
+      font-size: 13.5px;
+      color: var(--text-muted);
+      margin-bottom: 1rem;
+    }
+
+    /* Copy-Paste Prompts Layout */
+    .prompt-box {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 1rem;
+      position: relative;
+    }
+    .prompt-box-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-family: var(--font-mono);
+      font-size: 10px;
+      color: var(--text-faint);
+      margin-bottom: 8px;
+    }
+    .prompt-box pre {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      line-height: 1.6;
+      color: var(--text);
+      white-space: pre-wrap;
+      word-wrap: break-word;
+    }
+    .btn-copy {
+      background: transparent;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 4px 8px;
+      cursor: pointer;
+      font-size: 10px;
+      font-family: var(--font-mono);
+      color: var(--text-muted);
+      transition: var(--transition);
+    }
+    .btn-copy:hover {
+      color: var(--text);
+      border-color: var(--text-muted);
+      background: rgba(255, 255, 255, 0.02);
+    }
+    .btn-copy.copied {
+      background: var(--green-glow);
+      border-color: var(--green);
+      color: var(--green);
+    }
+
+    /* ==================================================================
+       5. INTERACTIVE WORKSHOP TOOLS
+       ================================================================== */
+    
+    /* Intake Prompt Customizer */
+    .customizer-box {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 2.5rem;
+      margin-top: 1rem;
+      box-shadow: var(--shadow);
+    }
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .form-group.full-width {
+      grid-column: span 2;
+    }
+    label {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+    input, select, textarea {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 0.75rem 1rem;
+      font-size: 14px;
+      transition: border-color var(--transition), box-shadow var(--transition);
+    }
+    input:focus, select:focus, textarea:focus {
+      border-color: var(--coral);
+      box-shadow: 0 0 0 3px var(--coral-glow);
+      outline: none;
+    }
+    textarea { resize: vertical; min-height: 80px; }
+    
+    .btn-generate {
+      background: var(--coral);
+      color: var(--bg);
+      border: none;
+      border-radius: 8px;
+      padding: 0.85rem 2rem;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition);
+      align-self: start;
+    }
+    .btn-generate:hover {
+      background: var(--coral-soft);
+      transform: translateY(-2px);
+    }
+    
+    .customizer-result {
+      margin-top: 2rem;
+      border-top: 1px solid var(--border);
+      padding-top: 2rem;
+      display: none;
+    }
+    .customizer-result.active { display: block; }
+    
+    .kickoff-prompt-card {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: var(--shadow);
+    }
+    .kickoff-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 18px;
+      background: rgba(255, 255, 255, 0.02);
+      border-bottom: 1px solid var(--border);
+    }
+    .kickoff-body {
+      padding: 1.5rem;
+      font-family: var(--font-mono);
+      font-size: 12.5px;
+      line-height: 1.75;
+      color: #ede5d9;
+      white-space: pre-wrap;
+      max-height: 480px;
+      overflow-y: auto;
+    }
+    .kickoff-body .ph { color: var(--amber); font-weight: 500; }
+    .kickoff-body .ph-head { color: var(--coral-soft); font-weight: 600; }
+
+    /* Interactive Quiz Framework */
+    .quiz-box {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 2.5rem;
+      margin-top: 1rem;
+      position: relative;
+    }
+    .quiz-question-container {
+      margin-bottom: 2rem;
+    }
+    .quiz-progress-num {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--text-faint);
+      margin-bottom: 8px;
+    }
+    .quiz-q-title {
+      font-family: var(--font-serif);
+      font-size: 1.5rem;
+      font-weight: 500;
+      margin-bottom: 1.5rem;
+      line-height: 1.35;
+    }
+    .quiz-options {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+    .quiz-option {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      transition: var(--transition);
+    }
+    .quiz-option:hover {
+      border-color: var(--border-hover);
+      background: rgba(255, 255, 255, 0.01);
+    }
+    .quiz-option.selected {
+      border-color: var(--coral);
+      background: var(--coral-glow);
+    }
+    .quiz-option.correct {
+      border-color: var(--green);
+      background: var(--green-glow);
+    }
+    .quiz-option.incorrect {
+      border-color: var(--red);
+      background: var(--red-glow);
+    }
+    
+    .radio-circle {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      border: 2px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      transition: var(--transition);
+    }
+    .quiz-option.selected .radio-circle {
+      border-color: var(--coral);
+    }
+    .quiz-option.selected .radio-circle::after {
+      content: "";
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--coral);
+    }
+    .quiz-option-text { font-size: 14.5px; line-height: 1.4; }
+    
+    .quiz-nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 2rem;
+    }
+    .btn-quiz {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 0.6rem 1.2rem;
+      cursor: pointer;
+      font-size: 13.5px;
+      font-weight: 500;
+      transition: var(--transition);
+    }
+    .btn-quiz:hover:not(:disabled) {
+      border-color: var(--text-muted);
+      background: rgba(255, 255, 255, 0.02);
+    }
+    .btn-quiz:disabled { opacity: 0.4; cursor: not-allowed; }
+    .btn-quiz.primary {
+      background: var(--teal);
+      border: none;
+      color: var(--bg);
+      font-weight: 600;
+    }
+    .btn-quiz.primary:hover:not(:disabled) {
+      background: var(--teal-soft);
+    }
+
+    /* Result / Certificate Widget */
+    .quiz-result-view {
+      display: none;
+      text-align: center;
+      padding: 1.5rem 0;
+    }
+    .quiz-result-view.active { display: block; }
+    
+    .cert-badge {
+      display: inline-block;
+      background: linear-gradient(135deg, #1b1713 0%, #110e0c 100%);
+      border: 2px solid var(--coral);
+      border-radius: 16px;
+      padding: 3rem 2rem;
+      max-width: 480px;
+      margin: 1.5rem auto 2.5rem;
+      box-shadow: 0 24px 60px -20px var(--coral-glow);
+      position: relative;
+      overflow: hidden;
+    }
+    .cert-badge::before {
+      content: "";
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(255, 255, 255, 0.03) 0%, transparent 60%);
+      pointer-events: none;
+    }
+    .cert-seal {
+      width: 72px;
+      height: 72px;
+      margin: 0 auto 1.5rem;
+      background: var(--coral-glow);
+      border: 2px dashed var(--coral);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--coral);
+    }
+    .cert-title {
+      font-family: var(--font-serif);
+      font-size: 1.8rem;
+      font-weight: 400;
+      margin-bottom: 0.5rem;
+      color: var(--text);
+    }
+    .cert-subtitle {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--amber);
+      margin-bottom: 1.5rem;
+    }
+    .cert-text {
+      font-size: 14px;
+      color: var(--text-muted);
+      line-height: 1.5;
+      margin-bottom: 1.5rem;
+    }
+    .cert-footer {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      color: var(--text-faint);
+      border-top: 1px solid var(--border);
+      padding-top: 1rem;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    /* Toast Notification Layer */
+    .toast-container {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      z-index: 1000;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+    .toast {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--coral);
+      border-radius: 6px;
+      padding: 10px 18px;
+      font-size: 13.5px;
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      box-shadow: var(--shadow);
+      transform: translateY(20px);
+      opacity: 0;
+      animation: toastIn 0.3s forwards cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .toast.success { border-left-color: var(--green); }
+    .toast.info { border-left-color: var(--teal); }
+    
+    @keyframes toastIn {
+      to { transform: translateY(0); opacity: 1; }
+    }
+    @keyframes toastOut {
+      to { transform: translateY(10px); opacity: 0; }
+    }
+
+    /* Footer styling */
+    footer {
+      margin-top: 6rem;
+      padding: 3rem 0;
+      border-top: 1px solid var(--border);
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--text-faint);
+      display: flex;
+      justify-content: space-between;
+      letter-spacing: 0.05em;
+    }
+    footer span a { color: var(--coral-soft); }
+
+    /* ==================================================================
+       6. RESPONSIVE DESIGN (MEDIA QUERIES)
+       ================================================================== */
+    @media (max-width: 1100px) {
+      .main-content { padding: 3rem 2.5rem; }
+    }
+
+    @media (max-width: 900px) {
+      body { flex-direction: column; }
+      .sidebar {
+        transform: translateX(-100%);
+        width: 280px;
+        box-shadow: 20px 0 50px rgba(0,0,0,0.8);
+      }
+      .sidebar.open {
+        transform: translateX(0);
+      }
+      .main-content {
+        margin-left: 0;
+        padding: 2.5rem 1.5rem;
+        width: 100%;
+        max-width: 100%;
+      }
+      .mobile-topbar { display: flex; }
+      .grid-desc, .entry-grid-detail, .tactics-grid {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+      }
+      .loop-visualizer {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+      }
+      .loop-node::after {
+        content: "↓";
+        right: 50%;
+        top: auto;
+        bottom: -1rem;
+        transform: translateX(50%);
+      }
+      .inventory-grid {
+        grid-template-columns: 1fr;
+      }
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+      .form-group.full-width {
+        grid-column: span 1;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Mobile Top Bar with Hamburger -->
+  <div class="mobile-topbar">
+    <div class="brand-title" style="font-size: 1.25rem;">AI Operator <span>Workshop</span></div>
+    <button class="hamburger" id="menuToggle" aria-label="Toggle Navigation Menu">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+  </div>
+
+  <!-- Sidebar Navigation Rail -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-brand">
+      <span class="brand-eyebrow">Interactive Course</span>
+      <h2 class="brand-title">AI Operator <span>Workshop</span></h2>
+    </div>
+
+    <!-- Live Course Progress -->
+    <div class="progress-widget">
+      <div class="progress-header">
+        <span>Course Progress</span>
+        <span id="progressPercent">0%</span>
+      </div>
+      <div class="progress-bar">
+        <div class="progress-fill" id="progressFill"></div>
+      </div>
+    </div>
+
+    <!-- Solution Search Box -->
+    <div class="search-box">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input type="text" class="search-input" id="solSearch" placeholder="Search 31 solutions & prompts...">
+    </div>
+
+    <!-- Navigation ScrollSpy Links -->
+    <ul class="nav-list">
+      <li class="nav-header">Introduction</li>
+      <li class="nav-item active" data-sec="intro"><a href="#intro"><span class="nav-dot"></span>Welcome</a></li>
+      <li class="nav-item" data-sec="tactics"><a href="#tactics"><span class="nav-dot"></span>Master Tactics</a></li>
+      
+      <li class="nav-header">Workshop Modules</li>
+      <li class="nav-item" data-sec="mod1-gather"><a href="#mod1-gather"><span class="nav-dot"></span>1. Gather Phase</a></li>
+      <li class="nav-item limit" data-sec="e01"><a href="#e01" style="padding-left: 1.5rem;"><span class="nav-dot"></span>№ 01 Cold Start</a></li>
+      <li class="nav-item limit" data-sec="e06"><a href="#e06" style="padding-left: 1.5rem;"><span class="nav-dot"></span>№ 06 Finite Context</a></li>
+      <li class="nav-item limit" data-sec="e07"><a href="#e07" style="padding-left: 1.5rem;"><span class="nav-dot"></span>№ 07 Knowledge Cutoff</a></li>
+      
+      <li class="nav-item" data-sec="mod2-brainstorm"><a href="#mod2-brainstorm"><span class="nav-dot"></span>2. Brainstorm Phase</a></li>
+      <li class="nav-item limit" data-sec="e03"><a href="#e03" style="padding-left: 1.5rem;"><span class="nav-dot"></span>№ 03 Sycophancy</a></li>
+      <li class="nav-item limit" data-sec="e04"><a href="#e04" style="padding-left: 1.5rem;"><span class="nav-dot"></span>№ 04 Overeager Intern</a></li>
+      
+      <li class="nav-item" data-sec="mod3-draft"><a href="#mod3-draft"><span class="nav-dot"></span>3. Draft Phase</a></li>
+      <li class="nav-item limit" data-sec="e08"><a href="#e08" style="padding-left: 1.5rem;"><span class="nav-dot"></span>№ 08 Average Output</a></li>
+      
+      <li class="nav-item" data-sec="mod4-build"><a href="#mod4-build"><span class="nav-dot"></span>4. Build Phase</a></li>
+      <li class="nav-item limit" data-sec="e02"><a href="#e02" style="padding-left: 1.5rem;"><span class="nav-dot"></span>№ 02 Hallucination</a></li>
+      
+      <li class="nav-item" data-sec="mod5-hygiene"><a href="#mod5-hygiene"><span class="nav-dot"></span>5. Session Hygiene</a></li>
+      <li class="nav-item limit" data-sec="e05"><a href="#e05" style="padding-left: 1.5rem;"><span class="nav-dot"></span>№ 05 Context Rot</a></li>
+      
+      <li class="nav-header">Interactive Utilities</li>
+      <li class="nav-item" data-sec="tool-customizer"><a href="#tool-customizer"><span class="nav-dot"></span>Prompt Customizer</a></li>
+      <li class="nav-item" data-sec="tool-challenge"><a href="#tool-challenge"><span class="nav-dot"></span>Operator Challenge</a></li>
+    </ul>
+  </aside>
+
+  <!-- Main Course Content -->
+  <main class="main-content">
+    
+    <!-- Masthead Section -->
+    <header class="masthead scroll-section" id="intro">
+      <span class="eyebrow">Cohesive Training Curriculum</span>
+      <h1>The AI <span>Operator</span> Masterclass & <em>Guardrails</em> Guide</h1>
+      <p class="lede">A structural workflow for scaling high-fidelity documents and builds with LLMs, integrated with the definitive index of AI limitations and their practical workarounds.</p>
+    </header>
+
+    <!-- Welcome & Core loop mapping -->
+    <section class="section-block">
+      <div class="grid-desc">
+        <div class="prose-desc">
+          <p>Frontier Large Language Models are highly capable reasoning engines, but when deployed in professional settings, the <strong>surrounding context</strong> is what breaks. We experience cold starts, agreeable tone hiding structural flaws, long chats losing logic, and output converging on flavorless average prose.</p>
+          <p>Solving these issues requires shifting from a passive "prompter" mindset to that of an **active system operator**. This workshop teaches you the four-phase workflow rhythm (Gather, Brainstorm, Draft, Build) and maps the eight load-bearing AI limitations directly onto this loop, providing 31 tested, copy-paste prompts to secure your outputs.</p>
+        </div>
+        <div class="looks-like" style="border-color: var(--coral);">
+          <span class="def-kicker" style="color: var(--coral);">The Objective</span>
+          <p style="font-size: 15px; color: var(--text-muted);">"Learn how to design repeatable pipelines, ground the model in hard context, force critical pushback during planning, and compile consistent visual artifacts every single time."</p>
+        </div>
+      </div>
+
+      <!-- Core Loop Flow -->
+      <div class="loop-visualizer">
+        <div class="loop-node ln-gather">
+          <div class="num"><span class="dot"></span>01</div>
+          <h3>Gather</h3>
+          <p>Collect raw ingredients: data, templates, constraints, and voice rules before triggering drafts.</p>
+        </div>
+        <div class="loop-node ln-brain">
+          <div class="num"><span class="dot"></span>02</div>
+          <h3>Brainstorm</h3>
+          <p>Interview Claude as a critical strategy partner to audit blind spots and lock scopes.</p>
+        </div>
+        <div class="loop-node ln-draft">
+          <div class="num"><span class="dot"></span>03</div>
+          <h3>Draft</h3>
+          <p>Lock structural narratives in raw, plain-text before generating full formats.</p>
+        </div>
+        <div class="loop-node ln-build">
+          <div class="num"><span class="dot"></span>04</div>
+          <h3>Build & Verify</h3>
+          <p>Compile the approved draft into template structures, fact-checking citations and data.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 0: Master Tactics -->
+    <section class="section-block scroll-section" id="tactics">
+      <div class="section-header">
+        <span class="section-kicker">Foundation Moves</span>
+        <h2>Master Tactics: <span>Meta-Moves</span> that rule them all</h2>
+        <p class="prose-desc" style="margin-top: 0.5rem; margin-bottom: 0;">Almost every solution in this playbook rests on one of these two strategic motions. Understand these, and the remaining chapters represent simple variations on a theme.</p>
+      </div>
+
+      <div class="tactics-grid">
+        <!-- Tactic 1 -->
+        <article class="tactic-card">
+          <span class="tactic-num">№ M1 · THE STRATEGY MOVE</span>
+          <h3 class="tactic-title">Use AI to use AI</h3>
+          <p class="tactic-sub">Don't write the prompt yourself. Have AI design it with you.</p>
+          <div class="tactic-diagram">
+            <svg viewBox="0 0 480 200" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <circle cx="40" cy="100" r="18" stroke="var(--coral)" stroke-width="1.2" fill="none"></circle>
+              <text x="40" y="103" fill="var(--text)" font-family="var(--font-mono)" font-size="8" text-anchor="middle">YOU</text>
+              <line x1="60" y1="100" x2="116" y2="100" stroke="var(--text-faint)" stroke-width="0.8"></line>
+              <polygon points="118,100 112,97 112,103" fill="var(--text-faint)"></polygon>
+              <text x="88" y="92" fill="var(--text-muted)" font-family="var(--font-serif)" font-size="9" font-style="italic" text-anchor="middle">vague idea</text>
+              <rect x="122" y="60" width="130" height="80" stroke="var(--coral)" stroke-width="1.4" fill="none"></rect>
+              <text x="187" y="52" fill="var(--coral)" font-family="var(--font-mono)" font-size="7" text-anchor="middle">CHAT 1 · BUILDER</text>
+              <text x="187" y="93" fill="var(--text-muted)" font-family="var(--font-serif)" font-size="11" font-style="italic" text-anchor="middle">interviews you,</text>
+              <text x="187" y="110" fill="var(--text-muted)" font-family="var(--font-serif)" font-size="11" font-style="italic" text-anchor="middle">writes the prompt</text>
+              <line x1="252" y1="100" x2="306" y2="100" stroke="var(--text-faint)" stroke-width="0.8"></line>
+              <polygon points="308,100 302,97 302,103" fill="var(--text-faint)"></polygon>
+              <text x="279" y="92" fill="var(--text-muted)" font-family="var(--font-serif)" font-size="9" font-style="italic" text-anchor="middle">tight brief</text>
+              <rect x="312" y="60" width="130" height="80" stroke="var(--teal)" stroke-width="1.6" fill="none"></rect>
+              <text x="377" y="52" fill="var(--teal)" font-family="var(--font-mono)" font-size="7" text-anchor="middle">CHAT 2 · DOER</text>
+              <text x="377" y="93" fill="var(--text-muted)" font-family="var(--font-serif)" font-size="11" font-style="italic" text-anchor="middle">runs the prompt,</text>
+              <text x="377" y="110" fill="var(--text-muted)" font-family="var(--font-serif)" font-size="11" font-style="italic" text-anchor="middle">delivers the work</text>
+              <line x1="442" y1="100" x2="468" y2="100" stroke="var(--text-faint)" stroke-width="0.8"></line>
+              <polygon points="470,100 464,97 464,103" fill="var(--text-faint)"></polygon>
+              <text x="240" y="180" fill="var(--text-faint)" font-family="var(--font-serif)" font-size="11" font-style="italic" text-anchor="middle">the prompt itself is the thing you collaborated on</text>
+            </svg>
+          </div>
+          <div class="tactic-body">
+            <p>The single biggest operational upgrade isn't typing a slightly better instructions set. It's getting AI to **interview you and construct the prompt** before you execute it.</p>
+            <p>Do not run deep queries on half-baked ideas. Build the brief in Chat A, lock it, and pass it to a clean Chat B. You act as director; the AI act as prompt engineer.</p>
+          </div>
+          <div class="prompt-box">
+            <div class="prompt-box-header"><span>Intake Prompter</span><button class="btn-copy" onclick="copyPromptText(this)">Copy Tactic Prompt</button></div>
+            <pre>I want to research [TOPIC] using a deep-research tool. Before I run the actual research, help me write a strong research prompt. Interview me one question at a time: what's my underlying question, who's it for, what would "useful" output look like for me, what sources or angles matter most, what's out of scope. After five to seven questions, output a clean, copy-paste-ready research prompt I can paste into Claude / ChatGPT / Perplexity deep research mode.</pre>
+          </div>
+        </article>
+
+        <!-- Tactic 2 -->
+        <article class="tactic-card">
+          <span class="tactic-num">№ M2 · THE PIPELINE MOVE</span>
+          <h3 class="tactic-title">Break it down</h3>
+          <p class="tactic-sub">Split complex tasks across multiple threads and chats.</p>
+          <div class="tactic-diagram">
+            <svg viewBox="0 0 480 200" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <rect x="14" y="36" width="155" height="128" stroke="var(--red)" stroke-width="1.2" fill="none"></rect>
+              <text x="91" y="28" fill="var(--red)" font-family="var(--font-mono)" font-size="7" text-anchor="middle">ONE BIG CHAT</text>
+              <g fill="var(--text-faint)" font-family="var(--font-mono)" font-size="7">
+                <text x="24" y="56">research...</text>
+                <text x="24" y="69">outline...</text>
+                <text x="24" y="82">analogies...</text>
+                <text x="24" y="95">copy...</text>
+                <text x="24" y="108">data check...</text>
+                <text x="24" y="121">build deck...</text>
+                <text x="24" y="134">revise...</text>
+                <text x="24" y="147">forgot setup</text>
+              </g>
+              <text x="91" y="160" fill="var(--red)" font-family="var(--font-mono)" font-size="14" text-anchor="middle">✗</text>
+              <line x1="184" y1="100" x2="222" y2="100" stroke="var(--text-faint)" stroke-width="1"></line>
+              <polygon points="224,100 218,96 218,104" fill="var(--text-faint)"></polygon>
+              <rect x="235" y="42" width="100" height="42" stroke="var(--green)" stroke-width="1.2" fill="none"></rect>
+              <text x="285" y="62" fill="var(--text)" font-family="var(--font-mono)" font-size="8" text-anchor="middle">chat 1</text>
+              <text x="285" y="75" fill="var(--green)" font-family="var(--font-serif)" font-size="9" font-style="italic" text-anchor="middle">research ✓</text>
+              <rect x="345" y="42" width="100" height="42" stroke="var(--green)" stroke-width="1.2" fill="none"></rect>
+              <text x="395" y="62" fill="var(--text)" font-family="var(--font-mono)" font-size="8" text-anchor="middle">chat 2</text>
+              <text x="395" y="75" fill="var(--green)" font-family="var(--font-serif)" font-size="9" font-style="italic" text-anchor="middle">outline ✓</text>
+              <rect x="235" y="95" width="100" height="42" stroke="var(--green)" stroke-width="1.2" fill="none"></rect>
+              <text x="285" y="115" fill="var(--text)" font-family="var(--font-mono)" font-size="8" text-anchor="middle">chat 3</text>
+              <text x="285" y="128" fill="var(--green)" font-family="var(--font-serif)" font-size="9" font-style="italic" text-anchor="middle">copy ✓</text>
+              <rect x="345" y="95" width="100" height="42" stroke="var(--green)" stroke-width="1.2" fill="none"></rect>
+              <text x="395" y="115" fill="var(--text)" font-family="var(--font-mono)" font-size="8" text-anchor="middle">chat 4</text>
+              <text x="395" y="128" fill="var(--green)" font-family="var(--font-serif)" font-size="9" font-style="italic" text-anchor="middle">build ✓</text>
+              <text x="340" y="180" fill="var(--text-faint)" font-family="var(--font-serif)" font-size="11" font-style="italic" text-anchor="middle">four chats, four scopes, four sharp outputs</text>
+            </svg>
+          </div>
+          <div class="tactic-body">
+            <p>Do not force a single chat thread to execute research, outline, write drafts, apply styling, and compile assets. The context gets muddied and begins to fail.</p>
+            <p>Isolate operations. **Open a new tab for each phase.** Feed the output of the prior phase as a seed into the next. Keeps context limits low and outputs extremely sharp.</p>
+          </div>
+          <div class="prompt-box">
+            <div class="prompt-box-header"><span>Pipeline Builder</span><button class="btn-copy" onclick="copyPromptText(this)">Copy Tactic Prompt</button></div>
+            <pre>I want to build [PROJECT — e.g., a 30-slide deck, a 5,000-word report, a launch plan]. Instead of doing it all in one chat, help me design a multi-chat workflow. List three to five discrete phases, what each chat is scoped to produce, what artifact comes out of each, and exactly what I should paste into the next chat as the seed. Do not combine phases that should be separate. We will execute one chat at a time. Start with phase 1.</pre>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- ==================================================================
+         WORKSHOP MODULES
+         ================================================================== -->
+
+    <!-- Module 1: Gather Phase -->
+    <section class="section-block scroll-section" id="mod1-gather">
+      <div class="section-header">
+        <span class="module-badge badge-gather">Module 1</span>
+        <h2>The Gather Phase: <span>Context is King</span></h2>
+        <p class="prose-desc">The AI Operator Method is only as good as the raw context you curate. Before asking the model to write, gather the visual and substance components. But beware: dumping a massive raw folder triggers context failures.</p>
+      </div>
+
+      <!-- Content Inventory Cards -->
+      <h3 class="inventory-title">The Curated Context Folder</h3>
+      <div class="inventory-grid">
+        <div class="inv-card ic-shape">
+          <span class="inv-tag">The Shape</span>
+          <h4>Templates</h4>
+          <p>Structure and format documents should match, so formatting fits on first try.</p>
+          <span class="example">e.g., last month's updates deck, template skeletons</span>
+        </div>
+        <div class="inv-card ic-shape">
+          <span class="inv-tag">The Shape</span>
+          <h4>Reference Examples</h4>
+          <p>High-quality historical outputs. Models pattern-match quality from past praise.</p>
+          <span class="example">e.g., the exact slide deck that closed the deal</span>
+        </div>
+        <div class="inv-card ic-voice">
+          <span class="inv-tag">The Voice</span>
+          <h4>Brand &amp; Style Guide</h4>
+          <p>Establishes tone, jargon limits, and banned phrases to prevent generic AI style.</p>
+          <span class="example">e.g., vocabulary guides, narrative rules</span>
+        </div>
+        <div class="inv-card ic-voice">
+          <span class="inv-tag">The Voice</span>
+          <h4>Decision Cheat Sheet</h4>
+          <p>Captures audience priorities, concerns, and strategic boundaries.</p>
+          <span class="example">e.g., what board members focus on</span>
+        </div>
+        <div class="inv-card ic-substance">
+          <span class="inv-tag">The Substance</span>
+          <h4>Raw Source Data</h4>
+          <p>The variable inputs that change each cycle. Must be structured plainly.</p>
+          <span class="example">e.g., CSV sheets, billing data, CRM exports</span>
+        </div>
+        <div class="inv-card ic-substance">
+          <span class="inv-tag">The Substance</span>
+          <h4>Stakeholder Requests</h4>
+          <p>Specific instructions or feedback requests from teammates or clients.</p>
+          <span class="example">e.g., custom follow-ups from the previous meeting</span>
+        </div>
+      </div>
+
+      <!-- Mapping of limitations related to Gather -->
+      <div class="limitations-header">
+        <h3>Threat Model: Gather Pitfalls</h3>
+        <span class="count">3 Failure Modes</span>
+      </div>
+
+      <!-- Limitation 1: Cold start -->
+      <div class="entry scroll-section" id="e01" data-open="false">
+        <button class="entry-header" onclick="toggleEntry(this)">
+          <span class="entry-num">№ 01</span>
+          <span>
+            <span class="entry-title-text">Cold start &amp; context tax</span>
+            <span class="entry-sub-text">Every chat starts with an empty memory, requiring repeated setup.</span>
+          </span>
+          <div class="entry-meta">
+            <span class="trend improving">Improving slowly</span>
+            <span class="toggle-icon">+</span>
+          </div>
+        </button>
+        <div class="entry-body">
+          <div class="entry-body-inner">
+            <div class="entry-content">
+              <div class="entry-grid-detail">
+                <div>
+                  <div class="def-block">
+                    <span class="def-kicker">Definition</span>
+                    <p>Models are stateless by default. Every time you open a tab, the model knows nothing of your writing style, client preferences, or operational goals. re-explaining this daily creates cognitive tax.</p>
+                  </div>
+                  <div class="looks-like">
+                    <span class="def-kicker">What it looks like</span>
+                    <p>Generating a high-fidelity report in one tab, but starting over from scratch in another because you forgot to bring along the style guidelines.</p>
+                  </div>
+                </div>
+                <div class="diagram-box">
+                  <svg viewBox="0 0 300 160" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                    <g stroke="var(--teal)" stroke-width="1.2" fill="none">
+                      <rect x="20" y="30" width="60" height="80"></rect>
+                      <rect x="120" y="30" width="60" height="80"></rect>
+                      <rect x="220" y="30" width="60" height="80"></rect>
+                    </g>
+                    <g fill="var(--teal)" font-family="var(--font-mono)" font-size="8" text-anchor="middle">
+                      <text x="50" y="22">CLAUDE</text>
+                      <text x="150" y="22">CHATGPT</text>
+                      <text x="250" y="22">GEMINI</text>
+                    </g>
+                    <g fill="var(--text-faint)" font-family="var(--font-mono)" font-size="10" text-anchor="middle" font-style="italic">
+                      <text x="50" y="75">∅</text>
+                      <text x="150" y="75">∅</text>
+                      <text x="250" y="75">∅</text>
+                    </g>
+                    <g stroke="var(--text-faint)" stroke-width="0.8" fill="none" stroke-dasharray="2,2">
+                      <path d="M 150 145 L 50 115"></path>
+                      <path d="M 150 145 L 150 115"></path>
+                      <path d="M 150 145 L 250 115"></path>
+                    </g>
+                    <text x="150" y="155" fill="var(--text)" font-family="var(--font-mono)" font-size="8" text-anchor="middle">YOU, re-explaining context</text>
+                  </svg>
+                  <div class="diagram-caption">Stateless context causes re-briefing overhead across tools.</div>
+                </div>
+              </div>
+
+              <!-- Solutions -->
+              <div class="solutions-section">
+                <div class="solutions-title">Tested Workarounds <span>05 solutions</span></div>
+                <div class="solutions-grid">
+                  
+                  <article class="solution" data-open="false">
+                    <button class="solution-header" onclick="toggleSolution(this)">
+                      <span class="solution-num">A</span>
+                      <span>
+                        <span class="sol-title-text">Hot Start Context Documents</span>
+                        <span class="sol-sub-text">Write a portable, reusable core reference text file.</span>
+                      </span>
+                      <span class="sol-toggle">+</span>
+                    </button>
+                    <div class="solution-body"><div class="solution-body-inner"><div class="solution-content">
+                      <p>Draft a structured text file outlining who you are, your goals, style guidelines, and output constraints. Upload or paste it first in every new chat.</p>
+                      <div class="prompt-box">
+                        <div class="prompt-box-header"><span>Tactical Prompt</span><button class="btn-copy" onclick="copyPromptText(this)">Copy</button></div>
+                        <pre>Interview me one question at a time to build a portable set of Hot Start Context Documents I can reuse across any AI tool. Cover: name and role, current projects, communication style, things I'm tired of explaining, constraints, and what I never want in output. Ask follow-ups when my answers are vague. When done, output a single clean document I can paste into any chat or attach to any project.</pre>
+                      </div>
+                    </div></div></div>
+                  </article>
+
+                  <article class="solution" data-open="false">
+                    <button class="solution-header" onclick="toggleSolution(this)">
+                      <span class="solution-num">B</span>
+                      <span>
+                        <span class="sol-title-text">Vendor Projects (Claude Projects / Custom GPTs)</span>
+                        <span class="sol-sub-text">Anchor instructions and files in a persistent container.</span>
+                      </span>
+                      <span class="sol-toggle">+</span>
+                    </button>
+                    <div class="solution-body"><div class="solution-body-inner"><div class="solution-content">
+                      <p>Upload your style guides and baseline templates to project containers (like a Claude Project), so all chats under it inherit the background context.</p>
+                      <div class="prompt-box">
+                        <div class="prompt-box-header"><span>Tactical Prompt</span><button class="btn-copy" onclick="copyPromptText(this)">Copy</button></div>
+                        <pre>Below is the type of work I want to delegate to a custom assistant: [PASTE WORK DESCRIPTION]. Draft a system prompt for a Claude Project or Custom GPT that handles this work. Include: assistant persona, scope, three to five firm rules, and a "when in doubt" fallback. Mark places where I should attach files.</pre>
+                      </div>
+                    </div></div></div>
+                  </article>
+
+                  <article class="solution" data-open="false">
+                    <button class="solution-header" onclick="toggleSolution(this)">
+                      <span class="solution-num">C</span>
+                      <span>
+                        <span class="sol-title-text">Native Memory Control</span>
+                        <span class="sol-sub-text">Audit and manipulate the vendor's long-term profile data.</span>
+                      </span>
+                      <span class="sol-toggle">+</span>
+                    </button>
+                    <div class="solution-body"><div class="solution-body-inner"><div class="solution-content">
+                      <p>Explicitly instruct the model what facts it should memorize for future chats and what facts to discard.</p>
+                      <div class="prompt-box">
+                        <div class="prompt-box-header"><span>Tactical Prompt</span><button class="btn-copy" onclick="copyPromptText(this)">Copy</button></div>
+                        <pre>From our recent conversations, list five facts about how I work that you'd save as long-term memory. For each, explain why it's worth remembering and how it would change your responses next time. Show me before you save.</pre>
+                      </div>
+                    </div></div></div>
+                  </article>
+
+                  <article class="solution" data-open="false">
+                    <button class="solution-header" onclick="toggleSolution(this)">
+                      <span class="solution-num">D</span>
+                      <span>
+                        <span class="sol-title-text">Pre-load Context Protocol</span>
+                        <span class="sol-sub-text">Never trigger an asset build in a cold state chat.</span>
+                      </span>
+                      <span class="sol-toggle">+</span>
+                    </button>
+                    <div class="solution-body"><div class="solution-body-inner"><div class="solution-content">
+                      <p>Warm up the context window with templates and guides first, force the model to acknowledge it, and then ask for content.</p>
+                      <div class="prompt-box">
+                        <div class="prompt-box-header"><span>Tactical Prompt</span><button class="btn-copy" onclick="copyPromptText(this)">Copy</button></div>
+                        <pre>I'm going to paste several reference items before I ask anything: my brand voice guide, two examples of past work I liked, and a short brief on audience and constraints. Read all of them. Tell me back in five bullets what you learned and what you'd want clarification on. Do not draft anything yet.</pre>
+                      </div>
+                    </div></div></div>
+                  </article>
+
+                  <article class="solution" data-open="false">
+                    <button class="solution-header" onclick="toggleSolution(this)">
+                      <span class="solution-num">E</span>
+                      <span>
+                        <span class="sol-title-text">Custom Operational Tutor</span>
+                        <span class="sol-sub-text">Create an assistant trained to act as your tool teacher.</span>
+                      </span>
+                      <span class="sol-toggle">+</span>
+                    </button>
+                    <div class="solution-body"><div class="solution-body-inner"><div class="solution-content">
+                      <p>Instruct a persistent project to serve as a tutor that audits your prompt styles and advises custom configurations.</p>
+                      <div class="prompt-box">
+                        <div class="prompt-box-header"><span>Tactical Prompt</span><button class="btn-copy" onclick="copyPromptText(this)">Copy</button></div>
+                        <pre>Help me design a Claude Project (or Custom GPT) that acts as my personal AI tutor. Interview me one question at a time: role I'm in, what I'm trying to learn, past work I can upload as examples, tutor style I want (Socratic, direct, hand-holding). After the interview, draft the system prompt and tell me exactly which files to attach.</pre>
+                      </div>
+                    </div></div></div>
+                  </article>
+
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Limitation 6: Finite context window -->
+      <div class="entry scroll-section" id="e06" data-open="false">
+        <button class="entry-header" onclick="toggleEntry(this)">
+          <span class="entry-num">№ 06</span>
+          <span>
+            <span class="entry-title-text">The context window is finite</span>
+            <span class="entry-sub-text">Large uploads cause attention decay and context collapse.</span>
+          </span>
+          <div class="entry-meta">
+            <span class="trend mixed">Mixed</span>
+            <span class="toggle-icon">+</span>
+          </div>
+        </button>
+        <div class="entry-body">
+          <div class="entry-body-inner">
+            <div class="entry-content">
+              <div class="entry-grid-detail">
+                <div>
+                  <div class="def-block">
+                    <span class="def-kicker">Definition</span>
+                    <p>While models list huge window limits (200k+ tokens), performance degrades in the middle of massive prompts. Instructions placed deep inside large files get forgotten or ignored.</p>
+                  </div>
+                  <div class="looks-like">
+                    <span class="def-kicker">What it looks like</span>
+                    <p>Uploading five long reports and noticing the model completely forgets to apply your style guide or misses key metrics from the third document.</p>
+                  </div>
+                </div>
+                <div class="diagram-box">
+                  <svg viewBox="0 0 300 160" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                    <rect x="40" y="35" width="180" height="90" fill="none" stroke="var(--teal)" stroke-width="1.4"></rect>
+                    <g fill="var(--text)" font-family="var(--font-mono)" font-size="7">
+                      <text x="50" y="55">document chunk (in attention)</text>
+                      <text x="50" y="68">document chunk (in attention)</text>
+                      <text x="50" y="81">document chunk (in attention)</text>
+                      <text x="50" y="94">document chunk (in attention)</text>
+                      <text x="50" y="107">document chunk (in attention)</text>
+                      <text x="50" y="120">document chunk (in attention)</text>
+                    </g>
+                    <g fill="var(--text-faint)" font-family="var(--font-mono)" font-size="7" opacity="0.4">
+                      <text x="230" y="68">chunk 7</text>
+                      <text x="230" y="81">chunk 8</text>
+                      <text x="230" y="94">chunk 9</text>
+                      <text x="230" y="107">chunk 10</text>
+                    </g>
+                    <text x="130" y="28" fill="var(--teal)" font-family="var(--font-mono)" font-size="7" text-anchor="middle">CONTEXT WINDOW LIMIT</text>
+                    <text x="255" y="138" fill="var(--red)" font-family="var(--font-serif)" font-size="8" font-style="italic" text-anchor="middle">overflow (ignored)</text>
+                  </svg>
+                  <div class="diagram-caption">Data matching window sizes still causes attention decay at extreme sizes.</div>
+                </div>
+              </div>
+
+              <!-- Solutions -->
+              <div class="solutions-section">
+                <div class="solutions-title">Tested Workarounds <span>03 solutions</span></div>
+                <div class="solutions-grid">
+                  
+                  <article class="solution" data-open="false">
+                    <button class="solution-header" onclick="toggleSolution(this)">
+                      <span class="solution-num">A</span>
+                      <span>
+                        <span class="sol-title-text">Retrieval (RAG) Filtering</span>
+                        <span class="sol-sub-text">Let index tools pull chunks instead of copying entire books.</span>
+                      </span>
+                      <span class="sol-toggle">+</span>
+                    </button>
+                    <div class="solution-body"><div class="solution-body-inner"><div class="solution-content">
+                      <p>Run your heavy data through tools like NotebookLM or build vector chunk stores, delivering only the matching paragraphs into the prompt.</p>
+                      <div class="prompt-box">
+                        <div class="prompt-box-header"><span>Tactical Prompt</span><button class="btn-copy" onclick="copyPromptText(this)">Copy</button></div>
+                        <pre>Don't try to read all 200 pages at once. Outline a chunking strategy for me: how to split the document, what metadata to attach to each chunk, and what retrieval queries match the questions I'll typically ask. Then we'll only load what's relevant.</pre>
+                      </div>
+                    </div></div></div>
+                  </article>
+
+                  <article class="solution" data-open="false">
+                    <button class="solution-header" onclick="toggleSolution(this)">
+                      <span class="solution-num">B</span>
+                      <span>
+                        <span class="sol-title-text">Subagent Dispatch</span>
+                        <span class="sol-sub-text">Deliver individual files to isolated chats, compiling summaries.</span>
+                      </span>
+                      <span class="sol-toggle">+</span>
+                    </button>
+                    <div class="solution-body"><div class="solution-body-inner"><div class="solution-content">
+                      <p>Distribute the reading load. Have Chat 1 review Document A, Chat 2 review Document B, and merge summaries in a central build thread.</p>
+                      <div class="prompt-box">
+                        <div class="prompt-box-header"><span>Tactical Prompt</span><button class="btn-copy" onclick="copyPromptText(this)">Copy</button></div>
+                        <pre>I have 30 customer interviews. Don't summarize them in one pass. Design a process where each interview goes to a separate fresh chat with a structured scoring rubric. Only the scores and a one-line takeaway come back. Then a final pass synthesizes the scores.</pre>
+                      </div>
+                    </div></div></div>
+                  </article>
+
+                  <article class="solution" data-open="false">
+                    <button class="solution-header" onclick="toggleSolution(this)">
+                      <span class="solution-num">C</span>
+                      <span>
+                        <span class="sol-title-text">Output Log Discipline</span>
+                        <span class="sol-sub-text">Suppress long tool responses and raw data returns.</span>
+                      </span>
+                      <span class="sol-toggle">+</span>
+                    </button>
+                    <div class="solution-body"><div class="solution-body-inner"><div class="solution-content">
+                      <p>Stop the model from echoing heavy content, coding logs, or long file readings back into the chat window.</p>
+                      <div class="prompt-box">
+                        <div class="prompt-box-header"><span>Tactical Prompt</span><button class="btn-copy" onclick="copyPromptText(this)">Copy</button></div>
+                        <pre>When you fetch a long document or search result, do not paste it back into our conversation. Read it, extract only the two or three items relevant to my question, and discard the rest. Tell me the source and a one-line summary of what you saw.</pre>
+                      </div>
+                    </div></div></div>
+                  </article>
+
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Limitation 7: Knowledge cutoff -->
+      <div class="entry scroll-section" id="e07" data-open="false">
+        <button class="entry-header" onclick="toggleEntry(this)">
+          <span class="entry-num">№ 07</span>
+          <span>
+            <span class="entry-title-text">Knowledge cutoff</span>
+            <span class="entry-sub-text">The model is blind to real-time events that occurred post-training.</span>
+          </span>
+          <div class="entry-meta">
+            <span class="trend improving">Improving</span>
+            <span class="toggle-icon">+</span>
+          </div>
+        </button>
+        <div class="entry-body">
+          <div class="entry-body-inner">
+            <div class="entry-content">
+              <div class="entry-grid-detail">
+                <div>
+                  <div class="def-block">
+                    <span class="def-kicker">Definition</span>
+                    <p>Static base models cannot query events beyond their training threshold. If you request dynamic metrics (market values, release changes) without enabling web search, the model will invent plausible defaults.</p>
+                  </div>
+                  <div class="looks-like">
+                    <span class="def-kicker">What it looks like</span>
+                    <p>Asking for the latest release API rules of a framework, and receiving syntax guidelines that were outdated a year ago.</p>
+                  </div>
+                </div>
+                <div class="diagram-box">
+                  <svg viewBox="0 0 300 160" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                    <line x1="30" y1="80" x2="280" y2="80" stroke="var(--text-faint)" stroke-width="1"></line>
+                    <line x1="180" y1="50" x2="180" y2="110" stroke="var(--teal)" stroke-width="2"></line>
+                    <g fill="var(--text)" font-family="var(--font-mono)" font-size="7">
+                      <text x="60" y="73">trained on</text>
+                      <text x="60" y="83">known facts</text>
+                      <text x="200" y="73">post-cutoff</text>
+                      <text x="200" y="83">unknown world</text>
+                    </g>
+                    <text x="180" y="42" fill="var(--teal)" font-family="var(--font-mono)" font-size="7" text-anchor="middle">CUTOFF DATE</text>
+                    <text x="250" y="105" fill="var(--red)" font-family="var(--font-serif)" font-size="14" font-style="italic">?</text>
+                  </svg>
+                  <div class="diagram-caption">Data beyond the cutoff date is blocked from the model's static memory.</div>
+                </div>
+              </div>
+
+              <!-- Solutions -->
+              <div class="solutions-section">
+                <div class="solutions-title">Tested Workarounds <span>03 solutions</span></div>
+                <div class="solutions-grid">
+                  
+                  <article class="solution" data-open="false">
+                    <button class="solution-header" onclick="toggleSolution(this)">
+                      <span class="solution-num">A</span>
+                      <span>
+                        <span class="sol-title-text">Enforced Live Web Query</span>
+                        <span class="sol-sub-text">Force the model to make live searches with temporal targets.</span>
+                      </span>
+                      <span class="sol-toggle">+</span>
+                    </button>
+                    <div class="solution-body"><div class="solution-body-inner"><div class="solution-content">
+                      <p>Override the model's habit of answering from memory. Demand immediate web searches with strict publication ranges.</p>
+                      <div class="prompt-box">
+                        <div class="prompt-box-header"><span>Tactical Prompt</span><button class="btn-copy" onclick="copyPromptText(this)">Copy</button></div>
+                        <pre>This question depends on current information. Use web search before answering. Cite at least two sources from the past 60 days. If you cannot find recent reliable sources, say so plainly and do not guess from older training data.</pre>
+                      </div>
+                    </div></div></div>
+                  </article>
+
+                  <article class="solution" data-open="false">
+                    <button class="solution-header" onclick="toggleSolution(this)">
+                      <span class="solution-num">B</span>
+                      <span>
+                        <span class="sol-title-text">Targeted RAG Feeds</span>
+                        <span class="sol-sub-text">Manually supply CSV or documentation exports before requesting code.</span>
+                      </span>
+                      <span class="sol-toggle">+</span>
+                    </button>
+                    <div class="solution-body"><div class="solution-body-inner"><div class="solution-content">
+                      <p>Upload the latest API releases or raw report pages directly into the session to bridge the timeline gap.</p>
+                      <div class="prompt-box">
+                        <div class="prompt-box-header"><span>Tactical Prompt</span><button class="btn-copy" onclick="copyPromptText(this)">Copy</button></div>
+                        <pre>Use only the documents I attached, plus the dates inside those documents. Do not blend in your training data for anything time-sensitive. If a document is older than my question requires, flag that explicitly instead of using it.</pre>
+                      </div>
+                    </div></div></div>
+                  </article>
+
+                  <article class="solution" data-open="false">
+                    <button class="solution-header" onclick="toggleSolution(this)">
+                      <span class="solution-num">C</span>
+                      <span>
+                        <span class="sol-title-text">Boundary Recognition Check</span>
+                        <span class="sol-sub-text">Audit the model's information cutoff limits before running logic.</span>
+                      </span>
+                      <span class="sol-toggle">+</span>
+                    </button>
+                    <div class="solution-body"><div class="solution-body-inner"><div class="solution-content">
+                      <p>Have the model analyze its own knowledge boundaries to identify where it might hallucinate details.</p>
+                      <div class="prompt-box">
+                        <div class="prompt-box-header"><span>Tactical Prompt</span><button class="btn-copy" onclick="copyPromptText(this)">Copy</button></div>
+                        <pre>Before answering, tell me your training cutoff date. Then read my question and flag any specific facts, names, numbers, prices, or events that are likely to have changed since then. List each one with the date you'd want to re-verify it. Only after that, answer the parts you can answer confidently from training data.</pre>
+                      </div>
+                    </div></div></div>
+                  </article>
+
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Module 2: Brainstorm Phase -->
+    <section class="section-block scroll-section" id="mod2-brainstorm">
+      <div class="section-header">
+        <span class="module-badge badge-brain">Module 2</span>
+        <h2>The Brainstorm Phase: <span>The Strategy Partner</span></h2>
+        <p class="prose-desc">Once context is loaded, use the model as a strategy sparring partner. Push back on obvious ideas, explore edge cases, and run interviews before committing to a plan. Here, we must fight the model's instinct to agree with us.</p>
+      </div>
+
+      <div class="limitations-header">
+        <h3>Threat Model: Brainstorm Pitfalls</h3>
+        <span class="count">2 Failure Modes</span>
+      </div>
+
+      <!-- Limitation 3: Sycophancy -->
+      <div class="entry scroll-section" id="e03" data-open="false">
+        <button class="entry-header" onclick="toggleEntry(this)">
+          <span class="entry-num">№ 03</span>
+          <span>
+            <span class="entry-title-text">Sycophancy</span>
+            <span class="entry-sub-text">The model flatteringly agrees with your ideas and praises poor decisions.</span>
+          </span>
+          <div class="entry-meta">
+            <span class="trend mixed">Mixed</span>
+            <span class="toggle-icon">+</span>
+          </div>
+        </button>
+        <div class="entry-body">
+          <div class="entry-body-inner">
+            <div class="entry-content">
+              <div class="entry-grid-detail">
+                <div>
+                  <div class="def-block">
+                    <span class="def-kicker">Definition</span>
+                    <p>RLHF (Reinforcement Learning from Human Feedback) trains models to sound agreeable. If you express a strong opinion or self-assess a draft, the model will confirm your bias, saying your ideas are "genius" or "perfect" instead of highlighting risks.</p>
+                  </div>
+                  <div class="looks-like">
+                    <span class="def-kicker">What it looks like</span>
+                    <p>You present a weak business pitch. The model replies: "This is a brilliant, highly disruptive model!" rather than noting your high customer acquisition cost.</p>
+                  </div>
+                </div>
+                <div class="diagram-box">
+                  <svg viewBox="0 0 300 160" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                    <g stroke="var(--teal)" stroke-width="1.2" fill="none">
+                      <path d="M 30 130 Q 80 130, 110 80 Q 140 30, 270 30"></path>
+                    </g>
+                    <line x1="30" y1="130" x2="270" y2="130" stroke="var(--text-faint)" stroke-width="0.6"></line>
+                    <line x1="30" y1="130" x2="30" y2="30" stroke="var(--text-faint)" stroke-width="0.6"></line>
+                    <g fill="var(--text-muted)" font-family="var(--font-mono)" font-size="7">
+                      <text x="32" y="142">"this is weak"</text>
+                      <text x="200" y="142">"this is brilliant"</text>
+                      <text x="14" y="32" transform="rotate(-90, 14, 32)">disagrees</text>
+                      <text x="14" y="125" transform="rotate(-90, 14, 125)">agrees</text>
+                    </g>
+                    <text x="175" y="70" fill="var(--teal)" font-family="var(--font-serif)" font-size="9" font-style="italic">agreement curve ↗</text>
+                  </svg>
+                  <div class="diagram-caption">As your prompt praise increases, the model's critical feedback decays.</div>
+                </div>
+              </div>
+
+              <!-- Solutions -->
+              <div class="solutions-section">
+                <div class="solutions-title">Tested Workarounds <span>04 solutions</span></div>
+                <div class="solutions-grid">
+                  
+                  <article class="solution" data-open="false">
+                    <button class="solution-header" onclick="toggleSolution(this)">
+                      <span class="solution-num">A</span>
+                      <span>
+                        <span class="sol-title-text">Adversarial Critic Persona</span>
+                        <span class="sol-sub-text">Force the model to list failures before it can list benefits.</span>
+                      </span>
+                      <span class="sol-toggle">+</span>
+                    </button>
+                    <div class="solution-body"><div class="solution-body-inner"><div class="solution-content">
+                      <p>Direct the assistant to identify logical gaps and strategic errors first, before writing any summary.</p>
+                      <div class="prompt-box">
+                        <div class="prompt-box-header"><span>Tactical Prompt</span><button class="btn-copy" onclick="copyPromptText(this)">Copy</button></div>
+                        <pre>Before responding to my plan below, first list three reasons it is likely to fail. Be specific and concrete. Then list three reasons it might succeed. Only after both lists, give your honest overall recommendation in two sentences. Do not soften the failure reasons.</pre>
+                      </div>
+                    </div></div></div>
+                  </article>
+
+                  <article class="solution" data-open="false">
+                    <button class="solution-header" onclick="toggleSolution(this)">
+                      <span class="solution-num">B</span>
+                      <span>
+                        <span class="sol-title-text">Blind Brief Review</span>
+                        <span class="sol-sub-text">Conceal your own perspective or authorship.</span>
+                      </span>
+                      <span class="sol-toggle">+</span>
+                    </button>
+                    <div class="solution-body"><div class="solution-body-inner"><div class="solution-content">
+                      <p>Present your work as if it were authored by a third party to remove flattery bias.</p>
+                      <div class="prompt-box">
+                        <div class="prompt-box-header"><span>Tactical Prompt</span><button class="btn-copy" onclick="copyPromptText(this)">Copy</button></div>
+                        <pre>Read the work below. Do not consider who wrote it or what they might want to hear. Assess it as if you were grading a stranger's submission. If it's mediocre, say mediocre. Be specific about what would move it from a B to an A.</pre>
+                      </div>
+                    </div></div></div>
+                  </article>
+
+                  <article class="solution" data-open="false">
+                    <button class="solution-header" onclick="toggleSolution(this)">
+                      <span class="solution-num">C</span>
+                      <span>
+                        <span class="sol-title-text">Opposite Steelmanning</span>
+                        <span class="sol-sub-text">Force the assistant to build the strongest possible counterargument.</span>
+                      </span>
+                      <span class="sol-toggle">+</span>
+                    </button>
+                    <div class="solution-body"><div class="solution-body-inner"><div class="solution-content">
+                      <p>Ask the model to defend the opposing view charitably before reviewing your core thesis.</p>
+                      <div class="prompt-box">
+                        <div class="prompt-box-header"><span>Tactical Prompt</span><button class="btn-copy" onclick="copyPromptText(this)">Copy</button></div>
+                        <pre>Argue the strongest case against my position below. Be charitable to the opposing view. Do not soften the argument. Use the smartest version of the counter-argument, not a strawman. After steelmanning the opposite, give your own assessment in one paragraph.</pre>
+                      </div>
+                    </div></div></div>
+                  </article>
+
+                  <article class="solution" data-open="false">
+                    <button class="solution-header" onclick="toggleSolution(this)">
+                      <span class="solution-num">D</span>
+                      <span>
+                        <span class="sol-title-text">Tone & Flattery Censorship</span>
+                        <span class="sol-sub-text">Ban common polite phrases and conversational fillers.</span>
+                      </span>
+                      <span class="sol-toggle">+</span>
+                    </button>
+                    <div class="solution-body"><div class="solution-body-inner"><div class="solution-content">
+                      <p>Strip conversational padding and compliments by applying a negative tone guide.</p>
+                      <div class="prompt-box">
+                        <div class="prompt-box-header"><span>Tactical Prompt</span><button class="btn-copy" onclick="copyPromptText(this)">Copy</button></div>
+                        <pre>For the rest of this chat: banned openings include "great question," "excellent point," "I love that you...," and any sentence that praises me before answering. Banned hedges: "somewhat," "fairly," "rather," "kind of." Be direct. Lead with the answer.</pre>
+                      </div>
+                    </div></div></div>
+                  </article>
+
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Limitation 4: Overeager intern -->
+      <div class="entry scroll-section" id="e04" data-open="false">
+        <button class="entry-header" onclick="toggleEntry(this)">
+          <span class="entry-num">№ 04</span>
+          <span>
+            <span class="entry-title-text">Overeager intern</span>
+            <span class="entry-sub-text">The model rushes to generate final drafts before clarifying your requirements.</span>
+          </span>
+          <div class="entry-meta">
+            <span class="trend flat">Flat</span>
+            <span class="toggle-icon">+</span>
+          </div>
+        </button>
+        <div class="entry-body">
+          <div class="entry-body-inner">
+            <div class="entry-content">
+              <div class="entry-grid-detail">
+                <div>
+                  <div class="def-block">
+                    <span class="def-kicker">Definition</span>
+                    <p>To reduce latency, models default to instant completion. Instead of asking for clarification on missing or vague details, the model guesses your requirements and outputs a long, generic response.</p>
+                  </div>
+                  <div class="looks-like">
+                    <span class="def-kicker">What it looks like</span>
+                    <p>Asking for a "sales report draft." The model immediately builds 10 slides for an imaginary company rather than asking for your CRM data and template structures.</p>
+                  </div>
+                </div>
+                <div class="diagram-box">
+                  <svg viewBox="0 0 300 160" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                    <g stroke="var(--teal)" stroke-width="1" fill="none">
+                      <circle cx="55" cy="80" r="16"></circle>
+                    </g>
+                    <text x="55" y="83" fill="var(--teal)" font-family="var(--font-mono)" font-size="8" text-anchor="middle">brief?</text>
+                    <g stroke="var(--text-faint)" stroke-width="0.7" fill="none">
+                      <path d="M 71 80 L 130 45"></path>
+                      <path d="M 71 80 L 130 80"></path>
+                      <path d="M 71 80 L 130 115"></path>
+                    </g>
+                    <g stroke="var(--teal)" stroke-width="1.6" fill="none">
+                      <path d="M 130 45 L 235 45"></path>
+                    </g>
+                    <g stroke="var(--border)" stroke-width="0.6" fill="none" stroke-dasharray="2,2">
+                      <path d="M 130 80 L 235 80"></path>
+                      <path d="M 130 115 L 235 115"></path>
+                    </g>
+                    <g fill="var(--teal)" font-family="var(--font-mono)" font-size="7" text-anchor="start">
+                      <text x="240" y="48">picked guess</text>
+                    </g>
+                    <g fill="var(--text-faint)" font-family="var(--font-mono)" font-size="7" text-anchor="start">
+                      <text x="240" y="83">not asked</text>
+                      <text x="240" y="118">not asked</text>
+                    </g>
+                    <text x="150" y="150" fill="var(--text-faint)" font-family="var(--font-serif)" font-size="9" font-style="italic" text-anchor="middle">instantly guesses, never halts for clarification</text>
+                  </svg>
+                  <div class="diagram-caption">Models choose a single interpretation and generate rather than halt.</div>
+                </div>
+              </div>
+
+              <!-- Solutions -->
+              <div class="solutions-section">
+                <div class="solutions-title">Tested Workarounds <span>04 solutions</span></div>
+                <div class="solutions-grid">
+                  
+                  <article class="solution" data-open="false">
+                    <button class="solution-header" onclick="toggleSolution(this)">
+                      <span class="solution-num">A</span>
+                      <span>
+                        <span class="sol-title-text">"Do Not Start Yet" Halt</span>
+                        <span class="sol-sub-text">The universal constraint to force a dialog first.</span>
+                      </span>
+                      <span class="sol-toggle">+</span>
+                    </button>
+                    <div class="solution-body"><div class="solution-body-inner"><div class="solution-content">
+                      <p>Command the model to ask clarifying questions before generating any code or text blocks.</p>
+                      <div class="prompt-box">
+                        <div class="prompt-box-header"><span>Tactical Prompt</span><button class="btn-copy" onclick="copyPromptText(this)">Copy</button></div>
+                        <pre>Do not start drafting yet. Before producing anything, ask me five short questions about scope, audience, voice, format, and constraints. One question at a time. Wait for my answer before asking the next. Do not begin the draft until I explicitly say "go."</pre>
+                      </div>
+                    </div></div></div>
+                  </article>
+
+                  <article class="solution" data-open="false">
+                    <button class="solution-header" onclick="toggleSolution(this)">
+                      <span class="solution-num">B</span>
+                      <span>
+                        <span class="sol-title-text">Guided Multiple Choice Intake</span>
+                        <span class="sol-sub-text">Force the model to interview you via structured options.</span>
+                      </span>
+                      <span class="sol-toggle">+</span>
+                    </button>
+                    <div class="solution-body"><div class="solution-body-inner"><div class="solution-content">
+                      <p>Instead of typing a long essay, let the model design a quick survey so you can reply with simple letter selections (e.g. A, B, C).</p>
+                      <div class="prompt-box">
+                        <div class="prompt-box-header"><span>Tactical Prompt</span><button class="btn-copy" onclick="copyPromptText(this)">Copy</button></div>
+                        <pre>Interview me one multiple-choice question at a time to scope this project. For each question, give me three to four lettered options (A, B, C, D) plus an "other, please describe" option. Wait for my answer before moving on. Cover at minimum: goal, audience, format, length, voice, and constraints. After five to seven questions, summarize what we agreed on and wait for my go-ahead before drafting.</pre>
+                      </div>
+                    </div></div></div>
+                  </article>
+
+                  <article class="solution" data-open="false">
+                    <button class="solution-header" onclick="toggleSolution(this)">
+                      <span class="solution-num">C</span>
+                      <span>
+                        <span class="sol-title-text">Multi-Thread Architecture</span>
+                        <span class="sol-sub-text">Break the work into distinct thread phases (Scoping → Outline → Build).</span>
+                      </span>
+                      <span class="sol-toggle">+</span>
+                    </button>
+                    <div class="solution-body"><div class="solution-body-inner"><div class="solution-content">
+                      <p>Divide your work streams. Let Thread 1 write the outline, and pass it to Thread 2 for copy generation.</p>
+                      <div class="prompt-box">
+                        <div class="prompt-box-header"><span>Tactical Prompt</span><button class="btn-copy" onclick="copyPromptText(this)">Copy</button></div>
+                        <pre>Don't try to build this in one chat. Lay out a three-chat plan for me: chat 1 = scoping and brief, chat 2 = research and outline, chat 3 = final build. For each chat, tell me what artifact comes out of it and exactly what I should paste into the next chat as the seed. We'll execute one chat at a time. Start with chat 1.</pre>
+                      </div>
+                    </div></div></div>
+                  </article>
+
+                  <article class="solution" data-open="false">
+                    <button class="solution-header" onclick="toggleSolution(this)">
+                      <span class="solution-num">D</span>
+                      <span>
+                        <span class="sol-title-text">Ingredient Locking</span>
+                        <span class="sol-sub-text">Confirm baseline facts and structure before compiling assets.</span>
+                      </span>
+                      <span class="sol-toggle">+</span>
+                    </button>
+                    <div class="solution-body"><div class="solution-body-inner"><div class="solution-content">
+                      <p>Run separate sub-tasks to lock down details (headlines, structural grids) before generating layout text.</p>
+                      <div class="prompt-box">
+                        <div class="prompt-box-header"><span>Tactical Prompt</span><button class="btn-copy" onclick="copyPromptText(this)">Copy</button></div>
+                        <pre>Before we generate the final [deck / page / doc], let's lock in the parts separately. In this chat, just nail down [STRUCTURE / HEADLINE / ANALOGY / KEY DATA]. Output it as a clean one-page reference doc I can paste into the build chat later. Do not draft the whole thing yet.</pre>
+                      </div>
+                    </div></div></div>
+                  </article>
+
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Module 3: Draft Phase -->
+    <section class="section-block scroll-section" id="mod3-draft">
+      <div class="section-header">
+        <span class="module-badge badge-draft">Module 3</span>
+        <h2>The Draft Phase: <span>Lock the Narrative</span></h2>
+        <p class="prose-desc">Never ask the model to outline, write copy, and format files in a single pass. In the Draft phase, **strip all layouts and style guides**—focus only on locking raw text structure (story flow, content points) in simple Markdown. But here, the model defaults to bland AI-sounding text.</p>
+      </div>
+
+      <div class="limitations-header">
+        <h3>Threat Model: Draft Pitfalls</h3>
+        <span class="count">1 Failure Mode</span>
+      </div>
+
+      <!-- Limitation 8: Tyranny of the average -->
+      <div class="entry scroll-section" id="e08" data-open="false">
+        <button class="entry-header" onclick="toggleEntry(this)">
+          <span class="entry-num">№ 08</span>
+          <span>
+            <span class="entry-title-text">Tyranny of the average</span>
+            <span class="entry-sub-text">Default outputs are bland, repetitive, and sound like generic AI.</span>
+          </span>
+          <div class="entry-meta">
+            <span class="trend worsening">Worsening</span>
+            <span class="toggle-icon">+</span>
+          </div>
+        </button>
+        <div class="entry-body">
+          <div class="entry-body-inner">
+            <div class="entry-content">
+              <div class="entry-grid-detail">
+                <div>
+                  <div class="def-block">
+                    <span class="def-kicker">Definition</span>
+                    <p>Because models are trained on average human writing patterns, their default outputs sound like a generic committee report. They overuse cliché verbs, build repetitive lists, and hide behind passive, professional padding.</p>
+                  </div>
+                  <div class="looks-like">
+                    <span class="def-kicker">What it looks like</span>
+                    <p>Emails that start with "I hope this finds you well," marketing copy packed with words like "leverage," "navigate," and "crucial," and paragraphs split by em-dashes.</p>
+                  </div>
+                </div>
+                <div class="diagram-box">
+                  <svg viewBox="0 0 300 160" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                    <line x1="30" y1="130" x2="280" y2="130" stroke="var(--text-faint)" stroke-width="0.6"></line>
+                    <path d="M 30 128 Q 80 128, 110 110 Q 140 50, 155 45 Q 170 50, 200 110 Q 230 128, 280 128" stroke="var(--teal)" stroke-width="1.4" fill="none"></path>
+                    <line x1="155" y1="50" x2="155" y2="130" stroke="var(--teal)" stroke-width="0.6" stroke-dasharray="2,2"></line>
+                    <g fill="var(--text-faint)" font-family="var(--font-mono)" font-size="7">
+                      <text x="32" y="145">unique style</text>
+                      <text x="155" y="145" text-anchor="middle">median average</text>
+                      <text x="245" y="145">unique style</text>
+                    </g>
+                    <text x="155" y="38" fill="var(--teal)" font-family="var(--font-serif)" font-size="9" font-style="italic" text-anchor="middle">default AI generation cluster</text>
+                  </svg>
+                  <div class="diagram-caption">Default model settings pull writing toward the generic center of the bell curve.</div>
+                </div>
+              </div>
+
+              <!-- Solutions -->
+              <div class="solutions-section">
+                <div class="solutions-title">Tested Workarounds <span>04 solutions</span></div>
+                <div class="solutions-grid">
+                  
+                  <article class="solution" data-open="false">
+                    <button class="solution-header" onclick="toggleSolution(this)">
+                      <span class="solution-num">A</span>
+                      <span>
+                        <span class="sol-title-text">Negative Style Guidelines</span>
+                        <span class="sol-sub-text">Explicitly ban specific clichés, verbs, and punctuation styles.</span>
+                      </span>
+                      <span class="sol-toggle">+</span>
+                    </button>
+                    <div class="solution-body"><div class="solution-body-inner"><div class="solution-content">
+                      <p>Stop telling the model to be "creative." Ban the words and structural habits that make it sound generic.</p>
+                      <div class="prompt-box">
+                        <div class="prompt-box-header"><span>Tactical Prompt</span><button class="btn-copy" onclick="copyPromptText(this)">Copy</button></div>
+                        <pre>Rewrite the text below. Banned: em-dashes, the words "actually," "simply," "crucial," "essential," "navigate," "leverage," "in today's world." No three-item lists. No "It's not just X, it's Y." Use short sentences. Sound like a tired editor, not a cheerful copywriter.</pre>
+                      </div>
+                    </div></div></div>
+                  </article>
+
+                  <article class="solution" data-open="false">
+                    <button class="solution-header" onclick="toggleSolution(this)">
+                      <span class="solution-num">B</span>
+                      <span>
+                        <span class="sol-title-text">Divergent Multi-Draft Generation</span>
+                        <span class="sol-sub-text">Force the model to output multiple variations, then extract the best elements.</span>
+                      </span>
+                      <span class="sol-toggle">+</span>
+                    </button>
+                    <div class="solution-body"><div class="solution-body-inner"><div class="solution-content">
+                      <p>Obtain multiple options in different voices, and combine the best bits into your final draft.</p>
+                      <div class="prompt-box">
+                        <div class="prompt-box-header"><span>Tactical Prompt</span><button class="btn-copy" onclick="copyPromptText(this)">Copy</button></div>
+                        <pre>Give me five wildly different drafts of this paragraph. Each commits to a distinct voice: one cynical, one tender, one technical, one journalistic, one essayistic. After the five, recommend which fits this audience best, and explain in one sentence why the other four don't.</pre>
+                      </div>
+                    </div></div></div>
+                  </article>
+
+                  <article class="solution" data-open="false">
+                    <button class="solution-header" onclick="toggleSolution(this)">
+                      <span class="solution-num">C</span>
+                      <span>
+                        <span class="sol-title-text">Personal Voice File Analysis</span>
+                        <span class="sol-sub-text">Provide sample text to let the model build a style guide based on your voice.</span>
+                      </span>
+                      <span class="sol-toggle">+</span>
+                    </button>
+                    <div class="solution-body"><div class="solution-body-inner"><div class="solution-content">
+                      <p>Train the model on your writing. Give it raw samples and have it extract a voice template.</p>
+                      <div class="prompt-box">
+                        <div class="prompt-box-header"><span>Tactical Prompt</span><button class="btn-copy" onclick="copyPromptText(this)">Copy</button></div>
+                        <pre>Read the five samples of my writing below. Draft a voice guide for me as a markdown file: sentence length, word preferences, structural habits, banned phrases, and what I never do. Include three example "before AI / after voice" rewrites so I can attach this to future projects.</pre>
+                      </div>
+                    </div></div></div>
+                  </article>
+
+                  <article class="solution" data-open="false">
+                    <button class="solution-header" onclick="toggleSolution(this)">
+                      <span class="solution-num">D</span>
+                      <span>
+                        <span class="sol-title-text">Predictive Obviousness Ban</span>
+                        <span class="sol-sub-text">Identify common angles and forbid them.</span>
+                      </span>
+                      <span class="sol-toggle">+</span>
+                    </button>
+                    <div class="solution-body"><div class="solution-body-inner"><div class="solution-content">
+                      <p>Have the model analyze predictable positions on a topic, then write a draft avoiding all of them.</p>
+                      <div class="prompt-box">
+                        <div class="prompt-box-header"><span>Tactical Prompt</span><button class="btn-copy" onclick="copyPromptText(this)">Copy</button></div>
+                        <pre>Before writing, list the five most predictable takes on this topic. Then write the draft so it deliberately avoids each of them. Lead with the counterintuitive angle a smart skeptic would respect. Reference the consensus only to push against it.</pre>
+                      </div>
+                    </div></div></div>
+                  </article>
+
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Module 4: Build Phase -->
+    <section class="section-block scroll-section" id="mod4-build">
+      <div class="section-header">
+        <span class="module-badge badge-build">Module 4</span>
+        <h2>The Build Phase: <span>Compile &amp; Ground</span></h2>
+        <p class="prose-desc">Once the draft is locked, compile it into the final visual format (slide deck, raw code, HTML file) using the templates and brand guide gathered in Phase 1. During compilation, implement strict fact-checking filters to prevent fabrications.</p>
+      </div>
+
+      <div class="limitations-header">
+        <h3>Threat Model: Build Pitfalls</h3>
+        <span class="count">1 Failure Mode</span>
+      </div>
+
+      <!-- Limitation 2: Hallucination -->
+      <div class="entry scroll-section" id="e02" data-open="false">
+        <button class="entry-header" onclick="toggleEntry(this)">
+          <span class="entry-num">№ 02</span>
+          <span>
+            <span class="entry-title-text">Hallucination</span>
+            <span class="entry-sub-text">Confident claims, fake figures, and incorrect references.</span>
+          </span>
+          <div class="entry-meta">
+            <span class="trend improving">Improving</span>
+            <span class="toggle-icon">+</span>
+          </div>
+        </button>
+        <div class="entry-body">
+          <div class="entry-body-inner">
+            <div class="entry-content">
+              <div class="entry-grid-detail">
+                <div>
+                  <div class="def-block">
+                    <span class="def-kicker">Definition</span>
+                    <p>Because models prioritize language fluency, they may fill gaps in knowledge with plausible-sounding lies: invented citations, incorrect metrics, or fake dates.</p>
+                  </div>
+                  <div class="looks-like">
+                    <span class="def-kicker">What it looks like</span>
+                    <p>A slide referencing a "Bain 2024 Study on CAC" that was never actually published.</p>
+                  </div>
+                </div>
+                <div class="diagram-box">
+                  <svg viewBox="0 0 300 160" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                    <g stroke="var(--teal)" stroke-width="1" fill="none">
+                      <rect x="20" y="30" width="120" height="90"></rect>
+                      <rect x="160" y="30" width="120" height="90"></rect>
+                    </g>
+                    <g fill="var(--text-faint)" font-family="var(--font-mono)" font-size="8" text-anchor="middle">
+                      <text x="80" y="22">GROUNDED FACT</text>
+                      <text x="220" y="22">HALLUCINATED</text>
+                    </g>
+                    <g fill="var(--text)" font-family="var(--font-serif)" font-size="9" font-style="italic" text-anchor="middle">
+                      <text x="80" y="60">Smith (2023)</text>
+                      <text x="80" y="75">"Nature, 12(4)"</text>
+                      <text x="80" y="90">pp. 211–229</text>
+                      <text x="220" y="60">Smith (2023)</text>
+                      <text x="220" y="75">"Nature, 12(4)"</text>
+                      <text x="220" y="90">pp. 211–229</text>
+                    </g>
+                    <g fill="var(--teal)" font-family="var(--font-mono)" font-size="12" text-anchor="middle" font-weight="600">
+                      <text x="80" y="110">✓</text>
+                      <text x="220" y="110" style="fill: var(--red);">✗</text>
+                    </g>
+                    <text x="150" y="148" fill="var(--text-faint)" font-family="var(--font-serif)" font-size="9" font-style="italic" text-anchor="middle">looks identical; only verifiable by checking sources</text>
+                  </svg>
+                  <div class="diagram-caption">Hallucinations inherit the tone and structure of real citations, hiding from fast audits.</div>
+                </div>
+              </div>
+
+              <!-- Solutions -->
+              <div class="solutions-section">
+                <div class="solutions-title">Tested Workarounds <span>04 solutions</span></div>
+                <div class="solutions-grid">
+                  
+                  <article class="solution" data-open="false">
+                    <button class="solution-header" onclick="toggleSolution(this)">
+                      <span class="solution-num">A</span>
+                      <span>
+                        <span class="sol-title-text">Strict Source Pinning</span>
+                        <span class="sol-sub-text">Force the model to answer only from provided files.</span>
+                      </span>
+                      <span class="sol-toggle">+</span>
+                    </button>
+                    <div class="solution-body"><div class="solution-body-inner"><div class="solution-content">
+                      <p>Stop the model from pulling from general knowledge. Require explicit citations and quote links.</p>
+                      <div class="prompt-box">
+                        <div class="prompt-box-header"><span>Tactical Prompt</span><button class="btn-copy" onclick="copyPromptText(this)">Copy</button></div>
+                        <pre>Answer only from the documents I attached. If the answer is not in the documents, say "not in source" and stop. For every claim, cite the filename and quote the exact supporting sentence. Do not blend in your training data.</pre>
+                      </div>
+                    </div></div></div>
+                  </article>
+
+                  <article class="solution" data-open="false">
+                    <button class="solution-header" onclick="toggleSolution(this)">
+                      <span class="solution-num">B</span>
+                      <span>
+                        <span class="sol-title-text">Skeptical Fact-Checker Pass</span>
+                        <span class="sol-sub-text">Open a separate chat specifically to find draft errors.</span>
+                      </span>
+                      <span class="sol-toggle">+</span>
+                    </button>
+                    <div class="solution-body"><div class="solution-body-inner"><div class="solution-content">
+                      <p>Paste your compiled draft into a new chat, telling the model its only goal is to flag claims it cannot verify.</p>
+                      <div class="prompt-box">
+                        <div class="prompt-box-header"><span>Tactical Prompt</span><button class="btn-copy" onclick="copyPromptText(this)">Copy</button></div>
+                        <pre>You are a skeptical fact-checker, not a writer. Read the draft below and flag every claim that is not 100% verifiable. For each flagged claim, propose the specific check or source I'd need to confirm it. Favor false positives. Do not rewrite anything.</pre>
+                      </div>
+                    </div></div></div>
+                  </article>
+
+                  <article class="solution" data-open="false">
+                    <button class="solution-header" onclick="toggleSolution(this)">
+                      <span class="solution-num">C</span>
+                      <span>
+                        <span class="sol-title-text">Forced Live Search Citations</span>
+                        <span class="sol-sub-text">Require at least two live, recent URLs for factual claims.</span>
+                      </span>
+                      <span class="sol-toggle">+</span>
+                    </button>
+                    <div class="solution-body"><div class="solution-body-inner"><div class="solution-content">
+                      <p>Direct the model to run web queries and cite real URLs for news and static figures.</p>
+                      <div class="prompt-box">
+                        <div class="prompt-box-header"><span>Tactical Prompt</span><button class="btn-copy" onclick="copyPromptText(this)">Copy</button></div>
+                        <pre>Search the web before answering. Cite at least two sources published in the last 90 days. If you cannot find recent reliable sources, say so plainly and do not fall back on training data. Prefer primary sources over aggregators.</pre>
+                      </div>
+                    </div></div></div>
+                  </article>
+
+                  <article class="solution" data-open="false">
+                    <button class="solution-header" onclick="toggleSolution(this)">
+                      <span class="solution-num">D</span>
+                      <span>
+                        <span class="sol-title-text">Confidence Grading Indicators</span>
+                        <span class="sol-sub-text">Direct the model to rate the certainty of its statements.</span>
+                      </span>
+                      <span class="sol-toggle">+</span>
+                    </button>
+                    <div class="solution-body"><div class="solution-body-inner"><div class="solution-content">
+                      <p>Make the model grade the certainty of its statements, flagging items that require manual review.</p>
+                      <div class="prompt-box">
+                        <div class="prompt-box-header"><span>Tactical Prompt</span><button class="btn-copy" onclick="copyPromptText(this)">Copy</button></div>
+                        <pre>Answer my question below. After each factual claim, attach a confidence rating: HIGH, MEDIUM, or LOW. Anything LOW must include the specific reason for uncertainty. At the end, list which claims I should personally verify before relying on them.</pre>
+                      </div>
+                    </div></div></div>
+                  </article>
+
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Module 5: Hygiene -->
+    <section class="section-block scroll-section" id="mod5-hygiene">
+      <div class="section-header">
+        <span class="module-badge badge-gather" style="background: var(--teal-glow); color: var(--teal-soft); border-color: var(--teal);">Workflow Hygiene</span>
+        <h2>Session Management &amp; Hygiene</h2>
+        <p class="prose-desc">The metaprocess that wraps the entire loop. Long sessions with dozens of turns quietly degrade model intelligence. Maintain thread hygiene to ensure consistent quality across multi-day builds.</p>
+      </div>
+
+      <div class="limitations-header">
+        <h3>Threat Model: Thread Rot</h3>
+        <span class="count">1 Failure Mode</span>
+      </div>
+
+      <!-- Limitation 5: Context rot -->
+      <div class="entry scroll-section" id="e05" data-open="false">
+        <button class="entry-header" onclick="toggleEntry(this)">
+          <span class="entry-num">№ 05</span>
+          <span>
+            <span class="entry-title-text">Context rot</span>
+            <span class="entry-sub-text">The model quietly degrades as thread conversation gets longer.</span>
+          </span>
+          <div class="entry-meta">
+            <span class="trend flat">Flat</span>
+            <span class="toggle-icon">+</span>
+          </div>
+        </button>
+        <div class="entry-body">
+          <div class="entry-body-inner">
+            <div class="entry-content">
+              <div class="entry-grid-detail">
+                <div>
+                  <div class="def-block">
+                    <span class="def-kicker">Definition</span>
+                    <p>As you chat, every turn consumes token attention. Past turns mud the context window, causing the model to repeat errors, ignore initial rules, and deliver slower, less creative outputs.</p>
+                  </div>
+                  <div class="looks-like">
+                    <span class="def-kicker">What it looks like</span>
+                    <p>Hour two of a programming session: the model starts rewriting bugs you resolved an hour ago and ignores formatting constraints.</p>
+                  </div>
+                </div>
+                <div class="diagram-box">
+                  <svg viewBox="0 0 300 160" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                    <line x1="30" y1="130" x2="280" y2="130" stroke="var(--text-faint)" stroke-width="0.6"></line>
+                    <line x1="30" y1="30" x2="30" y2="130" stroke="var(--text-faint)" stroke-width="0.6"></line>
+                    <path d="M 30 40 Q 90 42, 130 60 T 220 100 T 280 120" stroke="var(--teal)" stroke-width="1.4" fill="none"></path>
+                    <g fill="var(--text-faint)" font-family="var(--font-mono)" font-size="7">
+                      <text x="32" y="145">turn 1</text>
+                      <text x="245" y="145">turn 100+</text>
+                      <text x="14" y="35" transform="rotate(-90, 14, 35)">sharp</text>
+                      <text x="14" y="130" transform="rotate(-90, 14, 130)">dull</text>
+                    </g>
+                    <text x="165" y="55" fill="var(--teal)" font-family="var(--font-serif)" font-size="9" font-style="italic">rot begins</text>
+                    <line x1="165" y1="60" x2="135" y2="70" stroke="var(--teal)" stroke-width="0.6" stroke-dasharray="2,2"></line>
+                  </svg>
+                  <div class="diagram-caption">Instruction adherence degrades linearly as conversation history grows.</div>
+                </div>
+              </div>
+
+              <!-- Solutions -->
+              <div class="solutions-section">
+                <div class="solutions-title">Tested Workarounds <span>04 solutions</span></div>
+                <div class="solutions-grid">
+                  
+                  <article class="solution" data-open="false">
+                    <button class="solution-header" onclick="toggleSolution(this)">
+                      <span class="solution-num">A</span>
+                      <span>
+                        <span class="sol-title-text">Handoff Note Hygiene</span>
+                        <span class="sol-sub-text">Summarize states and open a fresh thread.</span>
+                      </span>
+                      <span class="sol-toggle">+</span>
+                    </button>
+                    <div class="solution-body"><div class="solution-body-inner"><div class="solution-content">
+                      <p>When the model begins repeating bugs, generate a summary note, close the tab, and start fresh.</p>
+                      <div class="prompt-box">
+                        <div class="prompt-box-header"><span>Tactical Prompt</span><button class="btn-copy" onclick="copyPromptText(this)">Copy</button></div>
+                        <pre>I'm ending this session. Write a clean handoff note I can paste into a new chat as the seed. Include only: what we decided, what's still open, what conventions we agreed on, and any files or links that matter. Skip nostalgia.</pre>
+                      </div>
+                    </div></div></div>
+                  </article>
+
+                  <article class="solution" data-open="false">
+                    <button class="solution-header" onclick="toggleSolution(this)">
+                      <span class="solution-num">B</span>
+                      <span>
+                        <span class="sol-title-text">Isolated Subtask Dispatches</span>
+                        <span class="sol-sub-text">Dispatch complex side work to isolated secondary chats.</span>
+                      </span>
+                      <span class="sol-toggle">+</span>
+                    </button>
+                    <div class="solution-body"><div class="solution-body-inner"><div class="solution-content">
+                      <p>Run separate subtasks (heavy code refactors, text drafting) in other tabs, bringing back only the final files to the main thread.</p>
+                      <div class="prompt-box">
+                        <div class="prompt-box-header"><span>Tactical Prompt</span><button class="btn-copy" onclick="copyPromptText(this)">Copy</button></div>
+                        <pre>Don't load everything into our session. Outline a process where the analysis is split across separate fresh chats, each with a focused scope. Give me the prompt to paste into each one. After each, the only thing returning to this thread is a five-line summary.</pre>
+                      </div>
+                    </div></div></div>
+                  </article>
+
+                  <article class="solution" data-open="false">
+                    <button class="solution-header" onclick="toggleSolution(this)">
+                      <span class="solution-num">C</span>
+                      <span>
+                        <span class="sol-title-text">Instruction Compaction</span>
+                        <span class="sol-sub-text">Condense conversational history to reclaim context window.</span>
+                      </span>
+                      <span class="sol-toggle">+</span>
+                    </button>
+                    <div class="solution-body"><div class="solution-body-inner"><div class="solution-content">
+                      <p>Have the model summarize the key decisions of the chat so far, clearing out old logs and brainstorming pages.</p>
+                      <div class="prompt-box">
+                        <div class="prompt-box-header"><span>Tactical Prompt</span><button class="btn-copy" onclick="copyPromptText(this)">Copy</button></div>
+                        <pre>Compact our conversation so far into a tight state note. Keep: decisions, conventions, file names, unresolved questions, and any prompts we settled on. Drop: brainstorming asides, my false starts, the parts where you apologized. We'll continue from the compaction.</pre>
+                      </div>
+                    </div></div></div>
+                  </article>
+
+                  <article class="solution" data-open="false">
+                    <button class="solution-header" onclick="toggleSolution(this)">
+                      <span class="solution-num">D</span>
+                      <span>
+                        <span class="sol-title-text">External Progress Document</span>
+                        <span class="sol-sub-text">Maintain a persistent markdown progress log in your workspace.</span>
+                      </span>
+                      <span class="sol-toggle">+</span>
+                    </button>
+                    <div class="solution-body"><div class="solution-body-inner"><div class="solution-content">
+                      <p>Update a local task file (like task.md) after every session, re-injecting it at the start of new sessions.</p>
+                      <div class="prompt-box">
+                        <div class="prompt-box-header"><span>Tactical Prompt</span><button class="btn-copy" onclick="copyPromptText(this)">Copy</button></div>
+                        <pre>Help me maintain a "progress doc" for this project that lives outside the chat. At the end of each session, write three sections: WHAT WE DID, WHAT WE DECIDED, WHAT'S NEXT. Keep the whole doc under one page. I'll paste it back at the start of every new session so we never lose state.</pre>
+                      </div>
+                    </div></div></div>
+                  </article>
+
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Interactive Section 6: Intake Prompt Customizer -->
+    <section class="section-block scroll-section" id="tool-customizer">
+      <div class="section-header">
+        <span class="section-kicker">Interactive App</span>
+        <h2>Kickoff Prompt Customizer</h2>
+        <p class="prose-desc">An interactive intake form to configure a bespoke **"First Message intake Prompt"** for Claude Projects or custom assistants. Input your task parameters below to compile the kickoff script.</p>
+      </div>
+
+      <div class="customizer-box">
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="outType">Target Deliverable Type</label>
+            <select id="outType">
+              <option value="Monthly Investor Update Deck">Investor Slide Deck</option>
+              <option value="Landing Page Copy & HTML">Landing Page & Layout</option>
+              <option value="Weekly Team Progress Report">Team Status Report</option>
+              <option value="API Integration Code Module">API Integration Code</option>
+              <option value="Customer Intake Email Flow">Customer Email Sequence</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="audience">Audience / Key Stakeholder</label>
+            <input type="text" id="audience" value="Board Members & Key Investors" placeholder="Who is this deliverable for?">
+          </div>
+          <div class="form-group">
+            <label for="inputs">Context Ingredients (To gather)</label>
+            <input type="text" id="inputs" value="Last month's deck, Brand voice sheet, Raw CRM CSV export" placeholder="List files to gather">
+          </div>
+          <div class="form-group">
+            <label for="length">Deliverable Length / Slide Count</label>
+            <input type="text" id="length" value="exactly five slides" placeholder="e.g. under 1000 words, exactly five slides">
+          </div>
+          <div class="form-group full-width">
+            <label for="details">Strategic Focus / Crucial Constraints</label>
+            <textarea id="details" placeholder="What does this audience care about most? e.g., Runway, CAC increases, simple language..."></textarea>
+          </div>
+        </div>
+        
+        <button class="btn-generate" onclick="generateKickoffPrompt()">Compile Playbook Kickoff Prompt</button>
+
+        <div class="customizer-result" id="customizerResult">
+          <div class="kickoff-prompt-card">
+            <div class="kickoff-head">
+              <span style="font-family: var(--font-mono); font-size: 11px; color: var(--text-faint);">kickoff-prompt.txt</span>
+              <button class="btn-copy" id="customCopyBtn" onclick="copyCustomPrompt()">Copy Kickoff Prompt</button>
+            </div>
+            <div class="kickoff-body" id="customPromptBody"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Interactive Section 7: Operator Challenge Quiz -->
+    <section class="section-block scroll-section" id="tool-challenge">
+      <div class="section-header">
+        <span class="section-kicker">Operational Validation</span>
+        <h2>The AI Operator Challenge</h2>
+        <p class="prose-desc">Verify your ability to identify and defeat AI limitations during active production. Complete this scenario-based assessment to unlock your Operational Badge.</p>
+      </div>
+
+      <div class="quiz-box" id="quizBox">
+        <div class="quiz-question-container" id="quizContent">
+          <!-- Populated dynamically via JS -->
+        </div>
+        
+        <div class="quiz-nav">
+          <button class="btn-quiz" id="quizPrev" onclick="quizNavigate(-1)">Previous</button>
+          <span class="quiz-progress-num" id="quizProgressState" style="margin-bottom: 0;">Question 1 of 5</span>
+          <button class="btn-quiz primary" id="quizNext" onclick="quizNavigate(1)">Next Question</button>
+        </div>
+
+        <!-- Completion / Certificate Badge -->
+        <div class="quiz-result-view" id="quizResultView">
+          <div class="cert-badge">
+            <div class="cert-seal">🎖️</div>
+            <h3 class="cert-title">Certified AI Operator</h3>
+            <div class="cert-subtitle">Syllabus Completion</div>
+            <p class="cert-text">This certifies that the bearer has completed the Unified AI Operator curriculum, demonstrating competency in workflow pipelining and defensive prompt systems.</p>
+            <div class="cert-footer">
+              <span>Grade: <strong id="certScore">100%</strong></span>
+              <span>Verification Code: <strong id="certCode">OP-8392</strong></span>
+            </div>
+          </div>
+          <button class="btn-generate" onclick="restartQuiz()">Restart Challenge</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+      <span>Unified Workshop Content &nbsp;·&nbsp; Gather → Brainstorm → Draft → Build</span>
+      <span>Created using <a href="file:///Users/jayvicsanantonio/Developer/claude-cowork-workshop/AI%20Operator%20Method_%20Claude%20Project%20Workflow%20Guide%20_%20Claude.html">Operator Playbook</a></span>
+    </footer>
+
+  </main>
+
+  <!-- Toast Notification Anchor -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <!-- ==================================================================
+       7. JAVASCRIPT PROGRAMMING LAYER
+       ================================================================== -->
+  <script>
+    /* ==================================================================
+       GLOBAL CONFIGS & DATA
+       ================================================================== */
+    
+    // Quiz Questions Data
+    const quizQuestions = [
+      {
+        question: "You want Claude to draft a newsletter. To avoid 'Tyranny of the Average' (bland copy), what is the first step you should execute during the Draft phase?",
+        options: [
+          "Ask it to write the newsletter and make it sound extremely creative and fun.",
+          "Provide a personal voice guide with samples, and instruct it to avoid common clichés like em-dashes and 'in today's world.'",
+          "Copy a generic system prompt from a web search and hope the model matches the requested tone.",
+          "Write the newsletter yourself and ask Claude to fix the formatting errors."
+        ],
+        answer: 1, // index 1
+        explanation: "Establishing style guidelines (positive rules and negative style guides) and anchoring the model with real writing samples are the most effective ways to drag it off the median."
+      },
+      {
+        question: "During a long session building a code module, you notice the model is repeating bugs you solved 30 minutes ago. What failure is occurring, and how do you fix it?",
+        options: [
+          "Sycophancy: Tell the model it is doing a great job so it gains confidence.",
+          "Hallucination: Ask for citations of where the bug first occurred.",
+          "Context Rot: Compact the session logic or open a fresh thread seeding the current correct files.",
+          "Knowledge Cutoff: Trigger a web search to check for the latest versions of the language."
+        ],
+        answer: 2, // index 2
+        explanation: "As threads lengthen, instructions degrade. End the thread, compile the current state, and start a fresh session with that state as a seed."
+      },
+      {
+        question: "You ask Claude to compile an investor deck and it immediately outputs ten slides with fake company statistics without asking for your actual reports. What is this, and how do you halt it?",
+        options: [
+          "Overeager Intern: Apply a 'Do Not Start Yet' rule, forcing the model to interview you one question at a time.",
+          "Hallucination: Let it write the slides first, and rewrite the false details yourself.",
+          "Tyranny of the Average: Instruct the model to write the slides in a cynical voice.",
+          "Finite Context: Delete some of your uploaded templates to make more room."
+        ],
+        answer: 0,
+        explanation: "Models default to immediate generation. Forcing an intake interview halts generation until parameters are locked."
+      },
+      {
+        question: "You want Claude to critique a new project plan, but it replies that the plan is 'genius' and 'guaranteed to succeed'. What is this behavior, and how do you correct it?",
+        options: [
+          "Context Rot: Clear the thread cache and reload the workspace files.",
+          "Sycophancy: Force the model to act as a critic, listing failure modes first before benefits.",
+          "Overeager Intern: Break the project plan into five separate smaller files.",
+          "Hallucination: Pin the document to raw sources and demand strict quote citations."
+        ],
+        answer: 1,
+        explanation: "Sycophancy rewards agreement. You must enforce an adversarial review role, requiring failure lists first to suppress flattery."
+      },
+      {
+        question: "You have 30 customer transcripts to review. Uploading all of them to a single chat is likely to trigger what issue, and how do you avoid it?",
+        options: [
+          "Tyranny of the Average: Avoid by writing the summaries yourself.",
+          "Sycophancy: Avoid by asking Claude to review the text using a blind assessment.",
+          "Finite Context / Attention Decay: Avoid by dispatching transcripts to isolated subagent threads and merging findings.",
+          "Knowledge Cutoff: Avoid by forcing web searches on each customer transcript."
+        ],
+        answer: 2,
+        explanation: "Heavy context windows rot attention. Dispersing reports across parallel threads keeps each reading pass highly accurate."
+      }
+    ];
+
+    let currentQuestionIdx = 0;
+    let selectedAnswers = Array(quizQuestions.length).fill(null);
+    let quizCompleted = false;
+
+    // Track Read Progress
+    const readSections = new Set();
+    const totalProgressSections = 12; // number of scroll sections/limitations to track progress
+
+    /* ==================================================================
+       INIT & EVENT LISTENERS
+       ================================================================== */
+    document.addEventListener('DOMContentLoaded', () => {
+      // Initialize Quiz
+      renderQuestion();
+      
+      // Setup Navigation active link behavior
+      setupScrollObserver();
+      
+      // Setup Search filter
+      document.getElementById('solSearch').addEventListener('input', runSearch);
+
+      // Mobile Menu Toggle
+      const menuToggle = document.getElementById('menuToggle');
+      const sidebar = document.getElementById('sidebar');
+      menuToggle.addEventListener('click', () => {
+        sidebar.classList.toggle('open');
+        menuToggle.classList.toggle('active');
+      });
+
+      // Close mobile menu on nav click
+      document.querySelectorAll('.nav-item a').forEach(link => {
+        link.addEventListener('click', () => {
+          sidebar.classList.remove('open');
+          menuToggle.classList.remove('active');
+        });
+      });
+      
+      // Setup Progress checkpoints
+      updateProgress();
+    });
+
+    /* ==================================================================
+       UI INTERACTIVE TRIGGERS & UTILS
+       ================================================================== */
+    
+    // Accordion Toggle
+    function toggleEntry(btn) {
+      const entry = btn.closest('.entry');
+      const isOpen = entry.getAttribute('data-open') === 'true';
+      
+      // Mutually exclusive: close all other entries in the module
+      const siblingEntries = entry.parentElement.querySelectorAll('.entry');
+      siblingEntries.forEach(sib => {
+        if (sib !== entry) sib.setAttribute('data-open', 'false');
+      });
+
+      entry.setAttribute('data-open', isOpen ? 'false' : 'true');
+      
+      // Mark read progression
+      if (!isOpen) {
+        readSections.add(entry.id);
+        updateProgress();
+      }
+    }
+
+    function toggleSolution(btn) {
+      const sol = btn.closest('.solution');
+      const isOpen = sol.getAttribute('data-open') === 'true';
+      
+      // Close other solutions in the grid
+      const siblingSols = sol.parentElement.querySelectorAll('.solution');
+      siblingSols.forEach(sib => {
+        if (sib !== sol) sib.setAttribute('data-open', 'false');
+      });
+
+      sol.setAttribute('data-open', isOpen ? 'false' : 'true');
+    }
+
+    // Toast Notification Creator
+    function showToast(text, type = 'info') {
+      const container = document.getElementById('toastContainer');
+      const toast = document.createElement('div');
+      toast.className = `toast ${type}`;
+      toast.innerHTML = `
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/>
+        </svg>
+        <span>${text}</span>
+      `;
+      container.appendChild(toast);
+      
+      setTimeout(() => {
+        toast.style.animation = 'toastOut 0.3s forwards cubic-bezier(0.16, 1, 0.3, 1)';
+        setTimeout(() => toast.remove(), 300);
+      }, 2000);
+    }
+
+    // Scroll Observer for Side Nav
+    function setupScrollObserver() {
+      const scrollSections = document.querySelectorAll('.scroll-section, .section-block');
+      const navItems = document.querySelectorAll('.nav-item');
+      
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            const secId = entry.target.id;
+            navItems.forEach(item => {
+              item.classList.remove('active');
+              if (item.getAttribute('data-sec') === secId) {
+                item.classList.add('active');
+                
+                // Track reading progress on viewing sections
+                if (secId.startsWith('mod') || secId.startsWith('e0')) {
+                  readSections.add(secId);
+                  updateProgress();
+                }
+              }
+            });
+          }
+        });
+      }, {
+        rootMargin: '-20% 0px -60% 0px'
+      });
+
+      scrollSections.forEach(section => observer.observe(section));
+    }
+
+    // Update Progress Widget
+    function updateProgress() {
+      const percent = Math.min(Math.round((readSections.size / totalProgressSections) * 100), 100);
+      document.getElementById('progressFill').style.width = `${percent}%`;
+      document.getElementById('progressPercent').textContent = `${percent}%`;
+    }
+
+    // Copy Prompt Text Function
+    function copyPromptText(btn) {
+      const box = btn.closest('.prompt-box');
+      const text = box.querySelector('pre').textContent;
+      
+      navigator.clipboard.writeText(text).then(() => {
+        btn.textContent = 'Copied!';
+        btn.classList.add('copied');
+        showToast('Prompt copied to clipboard', 'success');
+        
+        setTimeout(() => {
+          btn.textContent = 'Copy';
+          btn.classList.remove('copied');
+        }, 2000);
+      }).catch(() => {
+        showToast('Copy failed. Please select text manually.', 'error');
+      });
+    }
+
+    /* ==================================================================
+       IN SEARCH LOGIC
+       ================================================================== */
+    function runSearch() {
+      const query = document.getElementById('solSearch').value.toLowerCase();
+      const solutions = document.querySelectorAll('.solution');
+      
+      solutions.forEach(sol => {
+        const text = sol.textContent.toLowerCase();
+        const entry = sol.closest('.entry');
+        
+        if (query === '') {
+          // Reset view
+          sol.style.display = 'block';
+          if (entry && entry.getAttribute('data-open') === 'true') {
+            // Keep open state intact
+          }
+        } else if (text.includes(query)) {
+          sol.style.display = 'block';
+          sol.setAttribute('data-open', 'true');
+          if (entry) {
+            entry.setAttribute('data-open', 'true');
+          }
+        } else {
+          sol.style.display = 'none';
+          sol.setAttribute('data-open', 'false');
+        }
+      });
+    }
+
+    /* ==================================================================
+       INTERACTIVE KICKOFF PROMPT BUILDER
+       ================================================================== */
+    function generateKickoffPrompt() {
+      const outType = document.getElementById('outType').value;
+      const audience = document.getElementById('audience').value || 'Target Audience';
+      const inputs = document.getElementById('inputs').value || 'Inputs folder';
+      const length = document.getElementById('length').value || 'specified constraints';
+      const details = document.getElementById('details').value || 'Deliver raw output accurately matching criteria.';
+      
+      const ingredients = inputs.split(',').map(item => `- ${item.trim()}`).join('\n');
+      
+      const promptText = `You're helping me build the project instructions for this Claude Project. The goal is a repeatable workflow that produces my <span class="ph">${outType}</span> accurately and on brand, every single time.
+
+Start by looking around this project. I've gathered the inputs you'll need:
+${ingredients}
+
+Before you write a single line of instructions, interview me with a series of smart multiple choice questions so we land on the same page about what these instructions need to cover. Banish all initial fluff, greetings, or flattery.
+
+When you write the instructions, set up a four phase workflow:
+
+<span class="ph-head">GATHER</span>
+Always confirm I've collected every input the workflow needs. Check the raw documents. Validate I have everything before moving forward.
+
+<span class="ph-head">BRAINSTORM</span>
+Be a strategy partner, not a yes-man. Use the style guides and target files. Surface strategic blind spots, push back on obvious conclusions, and act like a critical reviewer.
+
+<span class="ph-head">DRAFT</span>
+Output only the narrative outline in raw markdown in chat. Wait for my explicit approval on the flow before you construct the output format.
+
+<span class="ph-head">BUILD &amp; VERIFY</span>
+Once I approve the narrative draft, build the final asset. Analyze the templates and write content that strictly conforms to the brand voice. Perform a skeptical fact-checking review, flagging claims that require verification.
+
+The final deliverable should be <span class="ph">${length}</span>.
+Key constraints: ${details}
+
+Ask your multiple choice questions now.`;
+
+      document.getElementById('customPromptBody').innerHTML = promptText;
+      const resultBox = document.getElementById('customizerResult');
+      resultBox.classList.add('active');
+      
+      // Auto-scroll to results
+      resultBox.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      showToast('Intake Kickoff Prompt compiled!', 'success');
+      
+      readSections.add('tool-customizer');
+      updateProgress();
+    }
+
+    function copyCustomPrompt() {
+      const card = document.getElementById('customPromptBody');
+      const text = card.textContent;
+      const btn = document.getElementById('customCopyBtn');
+      
+      navigator.clipboard.writeText(text).then(() => {
+        btn.textContent = 'Copied Playbook!';
+        btn.classList.add('copied');
+        showToast('Kickoff prompt copied to clipboard', 'success');
+        
+        setTimeout(() => {
+          btn.textContent = 'Copy Kickoff Prompt';
+          btn.classList.remove('copied');
+        }, 2000);
+      }).catch(() => {
+        showToast('Copy failed.', 'error');
+      });
+    }
+
+    /* ==================================================================
+       INTERACTIVE CHALLENGE (QUIZ) LOGIC
+       ================================================================== */
+    function renderQuestion() {
+      const container = document.getElementById('quizContent');
+      const q = quizQuestions[currentQuestionIdx];
+      const selected = selectedAnswers[currentQuestionIdx];
+      
+      let optionsHtml = '';
+      q.options.forEach((opt, idx) => {
+        let optClass = 'quiz-option';
+        if (selected !== null && idx === selected) {
+          optClass += ' selected';
+        }
+        optionsHtml += `
+          <div class="${optClass}" onclick="selectQuizOption(${idx})">
+            <div class="radio-circle"></div>
+            <div class="quiz-option-text">${opt}</div>
+          </div>
+        `;
+      });
+
+      container.innerHTML = `
+        <div class="quiz-progress-num">Question ${currentQuestionIdx + 1} of ${quizQuestions.length}</div>
+        <h4 class="quiz-q-title">${q.question}</h4>
+        <div class="quiz-options">
+          ${optionsHtml}
+        </div>
+      `;
+      
+      // Update nav buttons
+      document.getElementById('quizPrev').disabled = currentQuestionIdx === 0;
+      
+      const nextBtn = document.getElementById('quizNext');
+      if (currentQuestionIdx === quizQuestions.length - 1) {
+        nextBtn.textContent = 'Submit Answers';
+        nextBtn.className = 'btn-quiz primary';
+      } else {
+        nextBtn.textContent = 'Next Question';
+        nextBtn.className = 'btn-quiz';
+      }
+      
+      document.getElementById('quizProgressState').textContent = `Question ${currentQuestionIdx + 1} of ${quizQuestions.length}`;
+    }
+
+    function selectQuizOption(idx) {
+      if (quizCompleted) return;
+      selectedAnswers[currentQuestionIdx] = idx;
+      renderQuestion();
+    }
+
+    function quizNavigate(direction) {
+      if (direction === 1) {
+        // Validation check
+        if (selectedAnswers[currentQuestionIdx] === null) {
+          showToast('Please select an option before moving forward.', 'info');
+          return;
+        }
+        
+        if (currentQuestionIdx < quizQuestions.length - 1) {
+          currentQuestionIdx++;
+          renderQuestion();
+        } else {
+          // Submit Quiz
+          submitQuiz();
+        }
+      } else {
+        if (currentQuestionIdx > 0) {
+          currentQuestionIdx--;
+          renderQuestion();
+        }
+      }
+    }
+
+    function submitQuiz() {
+      // Calculate Score
+      let correctCount = 0;
+      quizQuestions.forEach((q, idx) => {
+        if (selectedAnswers[idx] === q.answer) {
+          correctCount++;
+        }
+      });
+      
+      const scorePercent = Math.round((correctCount / quizQuestions.length) * 100);
+      quizCompleted = true;
+      
+      // Hide standard navigation quiz states, show certificate
+      document.getElementById('quizContent').style.display = 'none';
+      document.querySelector('.quiz-nav').style.display = 'none';
+      
+      const resultView = document.getElementById('quizResultView');
+      resultView.classList.add('active');
+      
+      document.getElementById('certScore').textContent = `${scorePercent}%`;
+      // Generate a random confirmation serial
+      const serial = 'OP-' + Math.floor(Math.random() * 9000 + 1000);
+      document.getElementById('certCode').textContent = serial;
+      
+      showToast('Challenge completed! Certificate issued.', 'success');
+      
+      readSections.add('tool-challenge');
+      updateProgress();
+    }
+
+    function restartQuiz() {
+      currentQuestionIdx = 0;
+      selectedAnswers = Array(quizQuestions.length).fill(null);
+      quizCompleted = false;
+      
+      document.getElementById('quizContent').style.display = 'block';
+      document.querySelector('.quiz-nav').style.display = 'flex';
+      document.getElementById('quizResultView').classList.remove('active');
+      
+      renderQuestion();
+      showToast('Challenge restarted.', 'info');
+    }
+  </script>
+</body>
+</html>
