@@ -1659,8 +1659,8 @@
             </p>
             <p>
               Solving these issues requires shifting from a passive
-              "prompter" mindset to that of an **active system
-              operator**. This workshop teaches you the four-phase
+              "prompter" mindset to that of an <strong>active system
+              operator</strong>. This workshop teaches you the four-phase
               workflow rhythm (Gather, Brainstorm, Draft, Build) and
               maps the eight load-bearing AI limitations directly onto
               this loop, providing 31 tested, copy-paste prompts to
@@ -1924,7 +1924,7 @@
               <p>
                 The single biggest operational upgrade isn't typing a
                 slightly better instructions set. It's getting AI to
-                **interview you and construct the prompt** before you
+                <strong>interview you and construct the prompt</strong> before you
                 execute it.
               </p>
               <p>
@@ -2157,7 +2157,7 @@ I want to research [TOPIC] using a deep-research tool. Before I run the actual r
                 assets. The context gets muddied and begins to fail.
               </p>
               <p>
-                Isolate operations. **Open a new tab for each phase.**
+                Isolate operations. <strong>Open a new tab for each phase.</strong>
                 Feed the output of the prior phase as a seed into the
                 next. Keeps context limits low and outputs extremely
                 sharp.
@@ -3911,8 +3911,8 @@ Before we generate the final [deck / page / doc], let's lock in the parts separa
           <h2>The Draft Phase: <span>Lock the Narrative</span></h2>
           <p class="prose-desc">
             Never ask the model to outline, write copy, and format
-            files in a single pass. In the Draft phase, **strip all
-            layouts and style guides**—focus only on locking raw text
+            files in a single pass. In the Draft phase, <strong>strip all
+            layouts and style guides</strong>—focus only on locking raw text
             structure (story flow, content points) in simple Markdown.
             But here, the model defaults to bland AI-sounding text.
           </p>
@@ -4936,8 +4936,8 @@ Help me maintain a "progress doc" for this project that lives outside the chat. 
           <span class="section-kicker">Interactive App</span>
           <h2>Kickoff Prompt Customizer</h2>
           <p class="prose-desc">
-            An interactive intake form to configure a bespoke "First
-            Message intake Prompt" for Claude Projects or custom
+            An interactive intake form to configure a bespoke <strong>"First
+            Message intake Prompt"</strong> for Claude Projects or custom
             assistants. Input your task parameters below to compile
             the kickoff script.
           </p>
@@ -6198,6 +6198,8 @@ Help me maintain a "progress doc" for this project that lives outside the chat. 
         }
       }
 
+      let rawKickoffPrompt = '';
+
       function generateKickoffPrompt() {
         const outType = document.getElementById('outType').value;
         const audience =
@@ -6217,7 +6219,7 @@ Help me maintain a "progress doc" for this project that lives outside the chat. 
           .map((item) => `- ${item.trim()}`)
           .join('\n');
 
-        const promptText = `You're helping me build the project instructions for this Claude Project. The goal is a repeatable workflow that produces my <span class="ph">${outType}</span> accurately and on brand, every single time.
+        const promptText = `You're helping me build the project instructions for this Claude Project. The goal is a repeatable workflow that produces my **${outType}** accurately and on brand, every single time.
 
 Start by looking around this project. I've gathered the inputs you'll need:
 ${ingredients}
@@ -6226,25 +6228,32 @@ Before you write a single line of instructions, interview me with a series of sm
 
 When you write the instructions, set up a four phase workflow:
 
-<span class="ph-head">GATHER</span>
+**GATHER**
 Always confirm I've collected every input the workflow needs. Check the raw documents. Validate I have everything before moving forward.
 
-<span class="ph-head">BRAINSTORM</span>
+**BRAINSTORM**
 Be a strategy partner, not a yes-man. Use the style guides and target files. Surface strategic blind spots, push back on obvious conclusions, and act like a critical reviewer.
 
-<span class="ph-head">DRAFT</span>
+**DRAFT**
 Output only the narrative outline in raw markdown in chat. Wait for my explicit approval on the flow before you construct the output format.
 
-<span class="ph-head">BUILD &amp; VERIFY</span>
+**BUILD & VERIFY**
 Once I approve the narrative draft, build the final asset. Analyze the templates and write content that strictly conforms to the brand voice. Perform a skeptical fact-checking review, flagging claims that require verification.
 
-The final deliverable should be <span class="ph">${length}</span>.
+The final deliverable should be **${length}**.
 Key constraints: ${details}
 
 Ask your multiple choice questions now.`;
 
-        document.getElementById('customPromptBody').innerHTML =
-          promptText;
+        rawKickoffPrompt = promptText;
+
+        // Render styled HTML preview
+        let displayHtml = promptText
+          .replace(/\*\*(GATHER|BRAINSTORM|DRAFT|BUILD & VERIFY|BUILD &amp; VERIFY)\*\*/g, '<span class="ph-head">$1</span>')
+          .replace(/\*\*(.*?)\*\*/g, '<span class="ph">$1</span>')
+          .replace(/\n/g, '<br>');
+
+        document.getElementById('customPromptBody').innerHTML = displayHtml;
         const resultBox = document.getElementById('customizerResult');
         resultBox.classList.add('active');
 
@@ -6260,12 +6269,10 @@ Ask your multiple choice questions now.`;
       }
 
       function copyCustomPrompt() {
-        const card = document.getElementById('customPromptBody');
-        const text = card.textContent;
         const btn = document.getElementById('customCopyBtn');
 
         navigator.clipboard
-          .writeText(text)
+          .writeText(rawKickoffPrompt)
           .then(() => {
             btn.textContent = 'Copied Playbook!';
             btn.classList.add('copied');
