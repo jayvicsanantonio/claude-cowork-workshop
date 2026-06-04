@@ -605,7 +605,7 @@
     .entry-header::before {
       content: "";
       position: absolute;
-      left: 0;
+      left: -1rem;
       top: 1.75rem;
       width: 3px;
       height: 0;
@@ -1214,7 +1214,8 @@
       font-size: 11px;
       color: var(--text-faint);
       display: flex;
-      justify-content: space-between;
+      justify-content: center;
+      text-align: center;
       letter-spacing: 0.05em;
     }
     footer span a { color: var(--coral-soft); }
@@ -1315,21 +1316,21 @@
       <li class="nav-header">Workshop Modules</li>
       <li class="nav-item" data-sec="mod1-gather"><a href="#mod1-gather"><span class="nav-dot"></span>1. Gather Phase</a></li>
       <li class="nav-item limit" data-sec="e01"><a href="#e01" style="padding-left: 1.5rem;"><span class="nav-dot"></span>№ 01 Cold Start</a></li>
-      <li class="nav-item limit" data-sec="e06"><a href="#e06" style="padding-left: 1.5rem;"><span class="nav-dot"></span>№ 06 Finite Context</a></li>
-      <li class="nav-item limit" data-sec="e07"><a href="#e07" style="padding-left: 1.5rem;"><span class="nav-dot"></span>№ 07 Knowledge Cutoff</a></li>
+      <li class="nav-item limit" data-sec="e06"><a href="#e06" style="padding-left: 1.5rem;"><span class="nav-dot"></span>№ 02 Finite Context</a></li>
+      <li class="nav-item limit" data-sec="e07"><a href="#e07" style="padding-left: 1.5rem;"><span class="nav-dot"></span>№ 03 Knowledge Cutoff</a></li>
       
       <li class="nav-item" data-sec="mod2-brainstorm"><a href="#mod2-brainstorm"><span class="nav-dot"></span>2. Brainstorm Phase</a></li>
-      <li class="nav-item limit" data-sec="e03"><a href="#e03" style="padding-left: 1.5rem;"><span class="nav-dot"></span>№ 03 Sycophancy</a></li>
-      <li class="nav-item limit" data-sec="e04"><a href="#e04" style="padding-left: 1.5rem;"><span class="nav-dot"></span>№ 04 Overeager Intern</a></li>
+      <li class="nav-item limit" data-sec="e03"><a href="#e03" style="padding-left: 1.5rem;"><span class="nav-dot"></span>№ 04 Sycophancy</a></li>
+      <li class="nav-item limit" data-sec="e04"><a href="#e04" style="padding-left: 1.5rem;"><span class="nav-dot"></span>№ 05 Overeager Intern</a></li>
       
       <li class="nav-item" data-sec="mod3-draft"><a href="#mod3-draft"><span class="nav-dot"></span>3. Draft Phase</a></li>
-      <li class="nav-item limit" data-sec="e08"><a href="#e08" style="padding-left: 1.5rem;"><span class="nav-dot"></span>№ 08 Average Output</a></li>
+      <li class="nav-item limit" data-sec="e08"><a href="#e08" style="padding-left: 1.5rem;"><span class="nav-dot"></span>№ 06 Average Output</a></li>
       
       <li class="nav-item" data-sec="mod4-build"><a href="#mod4-build"><span class="nav-dot"></span>4. Build Phase</a></li>
-      <li class="nav-item limit" data-sec="e02"><a href="#e02" style="padding-left: 1.5rem;"><span class="nav-dot"></span>№ 02 Hallucination</a></li>
+      <li class="nav-item limit" data-sec="e02"><a href="#e02" style="padding-left: 1.5rem;"><span class="nav-dot"></span>№ 07 Hallucination</a></li>
       
       <li class="nav-item" data-sec="mod5-hygiene"><a href="#mod5-hygiene"><span class="nav-dot"></span>5. Session Hygiene</a></li>
-      <li class="nav-item limit" data-sec="e05"><a href="#e05" style="padding-left: 1.5rem;"><span class="nav-dot"></span>№ 05 Context Rot</a></li>
+      <li class="nav-item limit" data-sec="e05"><a href="#e05" style="padding-left: 1.5rem;"><span class="nav-dot"></span>№ 08 Context Rot</a></li>
       
       <li class="nav-header">Interactive Utilities</li>
       <li class="nav-item" data-sec="tool-customizer"><a href="#tool-customizer"><span class="nav-dot"></span>Prompt Customizer</a></li>
@@ -1396,7 +1397,7 @@
       <div class="tactics-grid">
         <!-- Tactic 1 -->
         <article class="tactic-card">
-          <span class="tactic-num">№ M1 · THE STRATEGY MOVE</span>
+          <span class="tactic-num">№ 01 · THE STRATEGY MOVE</span>
           <h3 class="tactic-title">Use AI to use AI</h3>
           <p class="tactic-sub">Don't write the prompt yourself. Have AI design it with you.</p>
           <div class="tactic-diagram">
@@ -1434,7 +1435,7 @@
 
         <!-- Tactic 2 -->
         <article class="tactic-card">
-          <span class="tactic-num">№ M2 · THE PIPELINE MOVE</span>
+          <span class="tactic-num">№ 02 · THE PIPELINE MOVE</span>
           <h3 class="tactic-title">Break it down</h3>
           <p class="tactic-sub">Split complex tasks across multiple threads and chats.</p>
           <div class="tactic-diagram">
@@ -1713,7 +1714,7 @@
       <!-- Limitation 6: Finite context window -->
       <div class="entry scroll-section" id="e06" data-open="false">
         <button class="entry-header" onclick="toggleEntry(this)">
-          <span class="entry-num">№ 06</span>
+          <span class="entry-num">№ 02</span>
           <span>
             <span class="entry-title-text">The context window is finite</span>
             <span class="entry-sub-text">Large uploads cause attention decay and context collapse.</span>
@@ -1831,7 +1832,7 @@
       <!-- Limitation 7: Knowledge cutoff -->
       <div class="entry scroll-section" id="e07" data-open="false">
         <button class="entry-header" onclick="toggleEntry(this)">
-          <span class="entry-num">№ 07</span>
+          <span class="entry-num">№ 03</span>
           <span>
             <span class="entry-title-text">Knowledge cutoff</span>
             <span class="entry-sub-text">The model is blind to real-time events that occurred post-training.</span>
@@ -1956,7 +1957,7 @@
       <!-- Limitation 3: Sycophancy -->
       <div class="entry scroll-section" id="e03" data-open="false">
         <button class="entry-header" onclick="toggleEntry(this)">
-          <span class="entry-num">№ 03</span>
+          <span class="entry-num">№ 04</span>
           <span>
             <span class="entry-title-text">Sycophancy</span>
             <span class="entry-sub-text">The model flatteringly agrees with your ideas and praises poor decisions.</span>
@@ -2087,7 +2088,7 @@
       <!-- Limitation 4: Overeager intern -->
       <div class="entry scroll-section" id="e04" data-open="false">
         <button class="entry-header" onclick="toggleEntry(this)">
-          <span class="entry-num">№ 04</span>
+          <span class="entry-num">№ 05</span>
           <span>
             <span class="entry-title-text">Overeager intern</span>
             <span class="entry-sub-text">The model rushes to generate final drafts before clarifying your requirements.</span>
@@ -2244,7 +2245,7 @@
       <!-- Limitation 8: Tyranny of the average -->
       <div class="entry scroll-section" id="e08" data-open="false">
         <button class="entry-header" onclick="toggleEntry(this)">
-          <span class="entry-num">№ 08</span>
+          <span class="entry-num">№ 06</span>
           <span>
             <span class="entry-title-text">Tyranny of the average</span>
             <span class="entry-sub-text">Default outputs are bland, repetitive, and sound like generic AI.</span>
@@ -2386,7 +2387,7 @@
       <!-- Limitation 2: Hallucination -->
       <div class="entry scroll-section" id="e02" data-open="false">
         <button class="entry-header" onclick="toggleEntry(this)">
-          <span class="entry-num">№ 02</span>
+          <span class="entry-num">№ 07</span>
           <span>
             <span class="entry-title-text">Hallucination</span>
             <span class="entry-sub-text">Confident claims, fake figures, and incorrect references.</span>
@@ -2540,7 +2541,7 @@
       <!-- Limitation 5: Context rot -->
       <div class="entry scroll-section" id="e05" data-open="false">
         <button class="entry-header" onclick="toggleEntry(this)">
-          <span class="entry-num">№ 05</span>
+          <span class="entry-num">№ 08</span>
           <span>
             <span class="entry-title-text">Context rot</span>
             <span class="entry-sub-text">The model quietly degrades as thread conversation gets longer.</span>
@@ -2764,8 +2765,7 @@
 
     <!-- Footer -->
     <footer>
-      <span>Unified Workshop Content &nbsp;·&nbsp; Gather → Brainstorm → Draft → Build</span>
-      <span>Created using <a href="file:///Users/jayvicsanantonio/Developer/claude-cowork-workshop/AI%20Operator%20Method_%20Claude%20Project%20Workflow%20Guide%20_%20Claude.html">Operator Playbook</a></span>
+      <span>Gather → Brainstorm → Draft → Build &nbsp;·&nbsp; Built with <span style="color: var(--coral);">Humans</span> in mind</span>
     </footer>
 
   </main>
@@ -2784,7 +2784,7 @@
     // All available quiz questions (50 total)
     const allQuizQuestions = [
       {
-        question: "You want to write a project proposal. Instead of writing the prompt yourself, you decide to use Tactic M1 (\"Use AI to use AI\"). What is the correct sequence?",
+        question: "You want to write a project proposal. Instead of writing the prompt yourself, you decide to use Tactic 1 (\"Use AI to use AI\"). What is the correct sequence?",
         options: [
           "Write the prompt in a new chat, run it in the same chat, and manually edit the output.",
           "Ask Chat A (Builder) to interview you and construct a high-fidelity prompt, then run that prompt in a clean Chat B (Doer).",
@@ -2792,7 +2792,7 @@
           "Write a very brief sentence and ask the model to generate the proposal immediately."
         ],
         answer: 1,
-        explanation: "Tactic M1 separates the 'Builder' (collaborative prompt design) and 'Doer' (execution) roles across clean threads to optimize context and focus."
+        explanation: "Tactic 1 separates the 'Builder' (collaborative prompt design) and 'Doer' (execution) roles across clean threads to optimize context and focus."
       },
       {
         question: "You want to avoid the \"Cold Start\" problem where you have to re-explain your brand voice and preferences in every new chat. What is the most portable workaround?",
