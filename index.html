@@ -1499,38 +1499,50 @@
         <div class="inv-card ic-shape">
           <span class="inv-tag">The Shape</span>
           <h4>Templates</h4>
-          <p>Structure and format documents should match, so formatting fits on first try.</p>
-          <span class="example">e.g., last month's updates deck, template skeletons</span>
+          <p>The exact file and format you want filled in, so output matches structure on the first try.</p>
+          <span class="example">e.g. last month's .pptx, a doc skeleton</span>
         </div>
         <div class="inv-card ic-shape">
           <span class="inv-tag">The Shape</span>
-          <h4>Reference Examples</h4>
-          <p>High-quality historical outputs. Models pattern-match quality from past praise.</p>
-          <span class="example">e.g., the exact slide deck that closed the deal</span>
+          <h4>Reference examples</h4>
+          <p>One or two finished pieces that landed well. Claude pattern-matches quality from these.</p>
+          <span class="example">e.g. the update investors praised</span>
         </div>
         <div class="inv-card ic-voice">
           <span class="inv-tag">The Voice</span>
-          <h4>Brand &amp; Style Guide</h4>
-          <p>Establishes tone, jargon limits, and banned phrases to prevent generic AI style.</p>
-          <span class="example">e.g., vocabulary guides, narrative rules</span>
+          <h4>Brand and style guide</h4>
+          <p>How things should sound and look so the output reads like you, not generic AI.</p>
+          <span class="example">e.g. tone rules, words to avoid</span>
         </div>
         <div class="inv-card ic-voice">
           <span class="inv-tag">The Voice</span>
-          <h4>Decision Cheat Sheet</h4>
-          <p>Captures audience priorities, concerns, and strategic boundaries.</p>
-          <span class="example">e.g., what board members focus on</span>
+          <h4>Decision cheat sheet</h4>
+          <p>What your audience cares about and how you prioritize. Fuels the brainstorm phase.</p>
+          <span class="example">e.g. what your investors push on</span>
         </div>
         <div class="inv-card ic-substance">
           <span class="inv-tag">The Substance</span>
-          <h4>Raw Source Data</h4>
-          <p>The variable inputs that change each cycle. Must be structured plainly.</p>
-          <span class="example">e.g., CSV sheets, billing data, CRM exports</span>
+          <h4>Source data</h4>
+          <p>The raw inputs that change each cycle. Exports, numbers, and metrics to pull from.</p>
+          <span class="example">e.g. CRM export, revenue, runway</span>
         </div>
         <div class="inv-card ic-substance">
           <span class="inv-tag">The Substance</span>
-          <h4>Stakeholder Requests</h4>
-          <p>Specific instructions or feedback requests from teammates or clients.</p>
-          <span class="example">e.g., custom follow-ups from the previous meeting</span>
+          <h4>Stakeholder asks</h4>
+          <p>Specific requests from named people so nothing requested last time gets dropped.</p>
+          <span class="example">e.g. the follow-ups from your last call</span>
+        </div>
+        <div class="inv-card ic-guards">
+          <span class="inv-tag">The Guardrails</span>
+          <h4>Hard constraints</h4>
+          <p>Non-negotiable rules on length, count, or format that the output must always honor.</p>
+          <span class="example">e.g. exactly five slides, no jargon</span>
+        </div>
+        <div class="inv-card ic-guards">
+          <span class="inv-tag">The Guardrails</span>
+          <h4>Process notes</h4>
+          <p>How you've done this before and what you learned. Saves repeating the same direction.</p>
+          <span class="example">e.g. lessons from past months</span>
         </div>
       </div>
 
@@ -1605,12 +1617,12 @@
                       <span class="solution-num">A</span>
                       <span>
                         <span class="sol-title-text">Hot Start Context Documents</span>
-                        <span class="sol-sub-text">Write a portable, reusable core reference text file.</span>
+                        <span class="sol-sub-text">Plain-text files about you that any AI can read.</span>
                       </span>
                       <span class="sol-toggle">+</span>
                     </button>
                     <div class="solution-body"><div class="solution-body-inner"><div class="solution-content">
-                      <p>Draft a structured text file outlining who you are, your goals, style guidelines, and output constraints. Upload or paste it first in every new chat.</p>
+                      <p>A structured set of plain-text files capturing who you are, what you do, how you work, your preferences and constraints. You own the files; every tool reads the same context. Drop them into Claude Projects, Custom GPTs, Gemini Gems, or paste into any new chat — your "hot start" so no chat begins from zero.</p>
                       <div class="prompt-box">
                         <div class="prompt-box-header"><span>Tactical Prompt</span><button class="btn-copy" onclick="copyPromptText(this)">Copy</button></div>
                         <pre>Interview me one question at a time to build a portable set of Hot Start Context Documents I can reuse across any AI tool. Cover: name and role, current projects, communication style, things I'm tired of explaining, constraints, and what I never want in output. Ask follow-ups when my answers are vague. When done, output a single clean document I can paste into any chat or attach to any project.</pre>
@@ -1622,16 +1634,16 @@
                     <button class="solution-header" onclick="toggleSolution(this)">
                       <span class="solution-num">B</span>
                       <span>
-                        <span class="sol-title-text">Vendor Projects (Claude Projects / Custom GPTs)</span>
-                        <span class="sol-sub-text">Anchor instructions and files in a persistent container.</span>
+                        <span class="sol-title-text">Custom Projects &amp; GPTs</span>
+                        <span class="sol-sub-text">Vendor containers that persist a system prompt and files.</span>
                       </span>
                       <span class="sol-toggle">+</span>
                     </button>
                     <div class="solution-body"><div class="solution-body-inner"><div class="solution-content">
-                      <p>Upload your style guides and baseline templates to project containers (like a Claude Project), so all chats under it inherit the background context.</p>
+                      <p>ChatGPT Custom GPTs, Claude Projects, Gemini Gems. Each lets you fix a system prompt plus uploaded files, so every new chat in that container starts from the same context — and so does anyone you share it with. The most mainstream solution for teams and solo operators alike: one project per workstream (newsletter, deck, client X) keeps the right context loaded for the right job.</p>
                       <div class="prompt-box">
                         <div class="prompt-box-header"><span>Tactical Prompt</span><button class="btn-copy" onclick="copyPromptText(this)">Copy</button></div>
-                        <pre>Below is the type of work I want to delegate to a custom assistant: [PASTE WORK DESCRIPTION]. Draft a system prompt for a Claude Project or Custom GPT that handles this work. Include: assistant persona, scope, three to five firm rules, and a "when in doubt" fallback. Mark places where I should attach files.</pre>
+                        <pre>Below is the type of work I want to delegate to a custom assistant: [PASTE]. Draft a system prompt for a Claude Project or Custom GPT that handles this work. Include: persona, scope, three to five firm rules, and a "when in doubt" fallback. Mark places where I should attach files.</pre>
                       </div>
                     </div></div></div>
                   </article>
@@ -1640,13 +1652,13 @@
                     <button class="solution-header" onclick="toggleSolution(this)">
                       <span class="solution-num">C</span>
                       <span>
-                        <span class="sol-title-text">Native Memory Control</span>
-                        <span class="sol-sub-text">Audit and manipulate the vendor's long-term profile data.</span>
+                        <span class="sol-title-text">Native memory features</span>
+                        <span class="sol-sub-text">Built-in memory that learns across sessions.</span>
                       </span>
                       <span class="sol-toggle">+</span>
                     </button>
                     <div class="solution-body"><div class="solution-body-inner"><div class="solution-content">
-                      <p>Explicitly instruct the model what facts it should memorize for future chats and what facts to discard.</p>
+                      <p>ChatGPT memory, Claude memory, Gemini's saved info. The model writes facts about you to a persistent store and reads them on every session. Convenient, but siloed per vendor and worth auditing — what gets saved is often more (and less) than you'd expect.</p>
                       <div class="prompt-box">
                         <div class="prompt-box-header"><span>Tactical Prompt</span><button class="btn-copy" onclick="copyPromptText(this)">Copy</button></div>
                         <pre>From our recent conversations, list five facts about how I work that you'd save as long-term memory. For each, explain why it's worth remembering and how it would change your responses next time. Show me before you save.</pre>
@@ -1658,13 +1670,13 @@
                     <button class="solution-header" onclick="toggleSolution(this)">
                       <span class="solution-num">D</span>
                       <span>
-                        <span class="sol-title-text">Pre-load Context Protocol</span>
-                        <span class="sol-sub-text">Never trigger an asset build in a cold state chat.</span>
+                        <span class="sol-title-text">Pre-load context first</span>
+                        <span class="sol-sub-text">Never trigger a generation on a cold chat.</span>
                       </span>
                       <span class="sol-toggle">+</span>
                     </button>
                     <div class="solution-body"><div class="solution-body-inner"><div class="solution-content">
-                      <p>Warm up the context window with templates and guides first, force the model to acknowledge it, and then ask for content.</p>
+                      <p>The first draft sets the trajectory. If the model starts in the wrong direction without your examples, brand, decisions, and constraints, no amount of follow-up feedback fully drags it back. Load everything <em>before</em> the first ask — files, prior work, a one-pager of who-what-why-how — then prompt. The difference between a three-minute correction and a thirty-minute rebuild.</p>
                       <div class="prompt-box">
                         <div class="prompt-box-header"><span>Tactical Prompt</span><button class="btn-copy" onclick="copyPromptText(this)">Copy</button></div>
                         <pre>I'm going to paste several reference items before I ask anything: my brand voice guide, two examples of past work I liked, and a short brief on audience and constraints. Read all of them. Tell me back in five bullets what you learned and what you'd want clarification on. Do not draft anything yet.</pre>
@@ -1676,13 +1688,13 @@
                     <button class="solution-header" onclick="toggleSolution(this)">
                       <span class="solution-num">E</span>
                       <span>
-                        <span class="sol-title-text">Custom Operational Tutor</span>
-                        <span class="sol-sub-text">Create an assistant trained to act as your tool teacher.</span>
+                        <span class="sol-title-text">Build your own tutor</span>
+                        <span class="sol-sub-text">A Claude Project trained on you, that teaches you.</span>
                       </span>
                       <span class="sol-toggle">+</span>
                     </button>
                     <div class="solution-body"><div class="solution-body-inner"><div class="solution-content">
-                      <p>Instruct a persistent project to serve as a tutor that audits your prompt styles and advises custom configurations.</p>
+                      <p>Stand up a custom project loaded with your past work, the tools you use, and a system prompt that turns the model into a patient teacher. Now every "how do I…" question gets answered with examples from <em>your</em> world, not the internet's average. The move that turns AI from a tool you use into a tool that grows alongside you.</p>
                       <div class="prompt-box">
                         <div class="prompt-box-header"><span>Tactical Prompt</span><button class="btn-copy" onclick="copyPromptText(this)">Copy</button></div>
                         <pre>Help me design a Claude Project (or Custom GPT) that acts as my personal AI tutor. Interview me one question at a time: role I'm in, what I'm trying to learn, past work I can upload as examples, tutor style I want (Socratic, direct, hand-holding). After the interview, draft the system prompt and tell me exactly which files to attach.</pre>
@@ -1758,13 +1770,13 @@
                     <button class="solution-header" onclick="toggleSolution(this)">
                       <span class="solution-num">A</span>
                       <span>
-                        <span class="sol-title-text">Retrieval (RAG) Filtering</span>
-                        <span class="sol-sub-text">Let index tools pull chunks instead of copying entire books.</span>
+                        <span class="sol-title-text">Retrieval (RAG)</span>
+                        <span class="sol-sub-text">Pull only what's relevant, not everything.</span>
                       </span>
                       <span class="sol-toggle">+</span>
                     </button>
                     <div class="solution-body"><div class="solution-body-inner"><div class="solution-content">
-                      <p>Run your heavy data through tools like NotebookLM or build vector chunk stores, delivering only the matching paragraphs into the prompt.</p>
+                      <p>Don't stuff the entire corpus into the prompt. Index it, retrieve the few chunks that match the question, and pass only those. NotebookLM, Claude Projects with files, ChatGPT with knowledge — all consumer-friendly RAG implementations.</p>
                       <div class="prompt-box">
                         <div class="prompt-box-header"><span>Tactical Prompt</span><button class="btn-copy" onclick="copyPromptText(this)">Copy</button></div>
                         <pre>Don't try to read all 200 pages at once. Outline a chunking strategy for me: how to split the document, what metadata to attach to each chunk, and what retrieval queries match the questions I'll typically ask. Then we'll only load what's relevant.</pre>
@@ -1776,13 +1788,13 @@
                     <button class="solution-header" onclick="toggleSolution(this)">
                       <span class="solution-num">B</span>
                       <span>
-                        <span class="sol-title-text">Subagent Dispatch</span>
-                        <span class="sol-sub-text">Deliver individual files to isolated chats, compiling summaries.</span>
+                        <span class="sol-title-text">Distribute across subagents</span>
+                        <span class="sol-sub-text">Split work across isolated fresh contexts.</span>
                       </span>
                       <span class="sol-toggle">+</span>
                     </button>
                     <div class="solution-body"><div class="solution-body-inner"><div class="solution-content">
-                      <p>Distribute the reading load. Have Chat 1 review Document A, Chat 2 review Document B, and merge summaries in a central build thread.</p>
+                      <p>If you have 30 documents to analyze, don't make one model read all 30. Hand each document to a separate analysis with a clear rubric, return only the structured scores, and have a final agent synthesize from the scores.</p>
                       <div class="prompt-box">
                         <div class="prompt-box-header"><span>Tactical Prompt</span><button class="btn-copy" onclick="copyPromptText(this)">Copy</button></div>
                         <pre>I have 30 customer interviews. Don't summarize them in one pass. Design a process where each interview goes to a separate fresh chat with a structured scoring rubric. Only the scores and a one-line takeaway come back. Then a final pass synthesizes the scores.</pre>
@@ -1794,13 +1806,13 @@
                     <button class="solution-header" onclick="toggleSolution(this)">
                       <span class="solution-num">C</span>
                       <span>
-                        <span class="sol-title-text">Output Log Discipline</span>
-                        <span class="sol-sub-text">Suppress long tool responses and raw data returns.</span>
+                        <span class="sol-title-text">Output discipline</span>
+                        <span class="sol-sub-text">Don't let tool results bloat the window.</span>
                       </span>
                       <span class="sol-toggle">+</span>
                     </button>
                     <div class="solution-body"><div class="solution-body-inner"><div class="solution-content">
-                      <p>Stop the model from echoing heavy content, coding logs, or long file readings back into the chat window.</p>
+                      <p>Long tool outputs (file reads, search results, logs) eat your window. Have the model read, extract what's relevant, and discard the raw payload before continuing. Anthropic caps tool responses at 25K tokens by default for this reason.</p>
                       <div class="prompt-box">
                         <div class="prompt-box-header"><span>Tactical Prompt</span><button class="btn-copy" onclick="copyPromptText(this)">Copy</button></div>
                         <pre>When you fetch a long document or search result, do not paste it back into our conversation. Read it, extract only the two or three items relevant to my question, and discard the rest. Tell me the source and a one-line summary of what you saw.</pre>
@@ -1869,13 +1881,13 @@
                     <button class="solution-header" onclick="toggleSolution(this)">
                       <span class="solution-num">A</span>
                       <span>
-                        <span class="sol-title-text">Enforced Live Web Query</span>
-                        <span class="sol-sub-text">Force the model to make live searches with temporal targets.</span>
+                        <span class="sol-title-text">Force web search</span>
+                        <span class="sol-sub-text">Require live sources with recent dates.</span>
                       </span>
                       <span class="sol-toggle">+</span>
                     </button>
                     <div class="solution-body"><div class="solution-body-inner"><div class="solution-content">
-                      <p>Override the model's habit of answering from memory. Demand immediate web searches with strict publication ranges.</p>
+                      <p>Modern chat products have web search but use it inconsistently. Telling the model to search and cite recent sources flips it from a guesser into a researcher. Works in ChatGPT, Claude, Gemini, Grok, Perplexity.</p>
                       <div class="prompt-box">
                         <div class="prompt-box-header"><span>Tactical Prompt</span><button class="btn-copy" onclick="copyPromptText(this)">Copy</button></div>
                         <pre>This question depends on current information. Use web search before answering. Cite at least two sources from the past 60 days. If you cannot find recent reliable sources, say so plainly and do not guess from older training data.</pre>
@@ -1887,13 +1899,13 @@
                     <button class="solution-header" onclick="toggleSolution(this)">
                       <span class="solution-num">B</span>
                       <span>
-                        <span class="sol-title-text">Targeted RAG Feeds</span>
-                        <span class="sol-sub-text">Manually supply CSV or documentation exports before requesting code.</span>
+                        <span class="sol-title-text">Private RAG for fresh data</span>
+                        <span class="sol-sub-text">Give the model documents it doesn't have.</span>
                       </span>
                       <span class="sol-toggle">+</span>
                     </button>
                     <div class="solution-body"><div class="solution-body-inner"><div class="solution-content">
-                      <p>Upload the latest API releases or raw report pages directly into the session to bridge the timeline gap.</p>
+                      <p>For data that's private (your company's, your team's) or simply newer than the cutoff, attach the source documents and tell the model to use only those. Especially useful for proprietary roadmaps, internal reports, and recent meeting notes.</p>
                       <div class="prompt-box">
                         <div class="prompt-box-header"><span>Tactical Prompt</span><button class="btn-copy" onclick="copyPromptText(this)">Copy</button></div>
                         <pre>Use only the documents I attached, plus the dates inside those documents. Do not blend in your training data for anything time-sensitive. If a document is older than my question requires, flag that explicitly instead of using it.</pre>
@@ -1905,13 +1917,13 @@
                     <button class="solution-header" onclick="toggleSolution(this)">
                       <span class="solution-num">C</span>
                       <span>
-                        <span class="sol-title-text">Boundary Recognition Check</span>
-                        <span class="sol-sub-text">Audit the model's information cutoff limits before running logic.</span>
+                        <span class="sol-title-text">Ask what it doesn't know first</span>
+                        <span class="sol-sub-text">Surface the staleness before it shows up in the answer.</span>
                       </span>
                       <span class="sol-toggle">+</span>
                     </button>
                     <div class="solution-body"><div class="solution-body-inner"><div class="solution-content">
-                      <p>Have the model analyze its own knowledge boundaries to identify where it might hallucinate details.</p>
+                      <p>Before letting the model answer a time-sensitive question, have it state its training cutoff and flag the parts of your question that are likely to be out of date. This turns a confident wrong answer into a transparent "here's what I'd want to look up first" — and tells you exactly where to verify before you ship anything.</p>
                       <div class="prompt-box">
                         <div class="prompt-box-header"><span>Tactical Prompt</span><button class="btn-copy" onclick="copyPromptText(this)">Copy</button></div>
                         <pre>Before answering, tell me your training cutoff date. Then read my question and flag any specific facts, names, numbers, prices, or events that are likely to have changed since then. List each one with the date you'd want to re-verify it. Only after that, answer the parts you can answer confidently from training data.</pre>
@@ -1996,13 +2008,13 @@
                     <button class="solution-header" onclick="toggleSolution(this)">
                       <span class="solution-num">A</span>
                       <span>
-                        <span class="sol-title-text">Adversarial Critic Persona</span>
-                        <span class="sol-sub-text">Force the model to list failures before it can list benefits.</span>
+                        <span class="sol-title-text">Adversarial reviewer</span>
+                        <span class="sol-sub-text">Tell the model its job is to push back.</span>
                       </span>
                       <span class="sol-toggle">+</span>
                     </button>
                     <div class="solution-body"><div class="solution-body-inner"><div class="solution-content">
-                      <p>Direct the assistant to identify logical gaps and strategic errors first, before writing any summary.</p>
+                      <p>Set up a critic persona with explicit instructions to find problems before approving. Works for any draft, plan, pitch, or strategy. The trick is forcing the model to articulate failure modes <em>before</em> it's allowed to say anything nice — otherwise the praise comes first and the warnings get softened.</p>
                       <div class="prompt-box">
                         <div class="prompt-box-header"><span>Tactical Prompt</span><button class="btn-copy" onclick="copyPromptText(this)">Copy</button></div>
                         <pre>Before responding to my plan below, first list three reasons it is likely to fail. Be specific and concrete. Then list three reasons it might succeed. Only after both lists, give your honest overall recommendation in two sentences. Do not soften the failure reasons.</pre>
@@ -2014,13 +2026,13 @@
                     <button class="solution-header" onclick="toggleSolution(this)">
                       <span class="solution-num">B</span>
                       <span>
-                        <span class="sol-title-text">Blind Brief Review</span>
-                        <span class="sol-sub-text">Conceal your own perspective or authorship.</span>
+                        <span class="sol-title-text">Hidden-conclusion framing</span>
+                        <span class="sol-sub-text">Don't reveal what you think first.</span>
                       </span>
                       <span class="sol-toggle">+</span>
                     </button>
                     <div class="solution-body"><div class="solution-body-inner"><div class="solution-content">
-                      <p>Present your work as if it were authored by a third party to remove flattery bias.</p>
+                      <p>Sycophancy mirrors your stated view back at you. If you withhold your view, the model has nothing to mirror and has to evaluate on the merits. "Evaluate X on its own" works much better than "I think X is good, what do you think?"</p>
                       <div class="prompt-box">
                         <div class="prompt-box-header"><span>Tactical Prompt</span><button class="btn-copy" onclick="copyPromptText(this)">Copy</button></div>
                         <pre>Read the work below. Do not consider who wrote it or what they might want to hear. Assess it as if you were grading a stranger's submission. If it's mediocre, say mediocre. Be specific about what would move it from a B to an A.</pre>
@@ -2032,13 +2044,13 @@
                     <button class="solution-header" onclick="toggleSolution(this)">
                       <span class="solution-num">C</span>
                       <span>
-                        <span class="sol-title-text">Opposite Steelmanning</span>
-                        <span class="sol-sub-text">Force the assistant to build the strongest possible counterargument.</span>
+                        <span class="sol-title-text">Steelman the opposite</span>
+                        <span class="sol-sub-text">Force the model to argue the other side first.</span>
                       </span>
                       <span class="sol-toggle">+</span>
                     </button>
                     <div class="solution-body"><div class="solution-body-inner"><div class="solution-content">
-                      <p>Ask the model to defend the opposing view charitably before reviewing your core thesis.</p>
+                      <p>Asking for the strongest case <em>against</em> your position before any assessment forces the model into a critical posture. Even when it eventually agrees with you, the steelman exposes the real risks you'd otherwise miss.</p>
                       <div class="prompt-box">
                         <div class="prompt-box-header"><span>Tactical Prompt</span><button class="btn-copy" onclick="copyPromptText(this)">Copy</button></div>
                         <pre>Argue the strongest case against my position below. Be charitable to the opposing view. Do not soften the argument. Use the smartest version of the counter-argument, not a strawman. After steelmanning the opposite, give your own assessment in one paragraph.</pre>
@@ -2050,13 +2062,13 @@
                     <button class="solution-header" onclick="toggleSolution(this)">
                       <span class="solution-num">D</span>
                       <span>
-                        <span class="sol-title-text">Tone & Flattery Censorship</span>
-                        <span class="sol-sub-text">Ban common polite phrases and conversational fillers.</span>
+                        <span class="sol-title-text">Ban flattery directly</span>
+                        <span class="sol-sub-text">A negative style guide for honesty.</span>
                       </span>
                       <span class="sol-toggle">+</span>
                     </button>
                     <div class="solution-body"><div class="solution-body-inner"><div class="solution-content">
-                      <p>Strip conversational padding and compliments by applying a negative tone guide.</p>
+                      <p>Models open with "great question" because they were trained to. Banning the opening line and the hedge words that follow strips the social padding and pulls answers closer to substance.</p>
                       <div class="prompt-box">
                         <div class="prompt-box-header"><span>Tactical Prompt</span><button class="btn-copy" onclick="copyPromptText(this)">Copy</button></div>
                         <pre>For the rest of this chat: banned openings include "great question," "excellent point," "I love that you...," and any sentence that praises me before answering. Banned hedges: "somewhat," "fairly," "rather," "kind of." Be direct. Lead with the answer.</pre>
@@ -2139,13 +2151,13 @@
                     <button class="solution-header" onclick="toggleSolution(this)">
                       <span class="solution-num">A</span>
                       <span>
-                        <span class="sol-title-text">"Do Not Start Yet" Halt</span>
-                        <span class="sol-sub-text">The universal constraint to force a dialog first.</span>
+                        <span class="sol-title-text">"Do not start yet"</span>
+                        <span class="sol-sub-text">The single load-bearing rule.</span>
                       </span>
                       <span class="sol-toggle">+</span>
                     </button>
                     <div class="solution-body"><div class="solution-body-inner"><div class="solution-content">
-                      <p>Command the model to ask clarifying questions before generating any code or text blocks.</p>
+                      <p>Three words that change the shape of the entire chat. Telling the model not to draft until you've briefed it — or it has briefed itself by asking — is the highest-leverage prompt rule for non-coders. Without it, the model guesses; with it, you get to scope the work before tokens get burned in the wrong direction.</p>
                       <div class="prompt-box">
                         <div class="prompt-box-header"><span>Tactical Prompt</span><button class="btn-copy" onclick="copyPromptText(this)">Copy</button></div>
                         <pre>Do not start drafting yet. Before producing anything, ask me five short questions about scope, audience, voice, format, and constraints. One question at a time. Wait for my answer before asking the next. Do not begin the draft until I explicitly say "go."</pre>
@@ -2157,13 +2169,13 @@
                     <button class="solution-header" onclick="toggleSolution(this)">
                       <span class="solution-num">B</span>
                       <span>
-                        <span class="sol-title-text">Guided Multiple Choice Intake</span>
-                        <span class="sol-sub-text">Force the model to interview you via structured options.</span>
+                        <span class="sol-title-text">Talk-it-out interview</span>
+                        <span class="sol-sub-text">Multiple-choice questions, one at a time.</span>
                       </span>
                       <span class="sol-toggle">+</span>
                     </button>
                     <div class="solution-body"><div class="solution-body-inner"><div class="solution-content">
-                      <p>Instead of typing a long essay, let the model design a quick survey so you can reply with simple letter selections (e.g. A, B, C).</p>
+                      <p>Most people don't know what to type into the prompt. Inverting the dynamic — letting the model interview <em>you</em> in multiple choice — turns the blank page into a guided intake. A/B/C/D answers are easier than essay answers, the model keeps going until the scope is clean, and you end with a brief miles better than what you'd have typed cold.</p>
                       <div class="prompt-box">
                         <div class="prompt-box-header"><span>Tactical Prompt</span><button class="btn-copy" onclick="copyPromptText(this)">Copy</button></div>
                         <pre>Interview me one multiple-choice question at a time to scope this project. For each question, give me three to four lettered options (A, B, C, D) plus an "other, please describe" option. Wait for my answer before moving on. Cover at minimum: goal, audience, format, length, voice, and constraints. After five to seven questions, summarize what we agreed on and wait for my go-ahead before drafting.</pre>
@@ -2175,13 +2187,13 @@
                     <button class="solution-header" onclick="toggleSolution(this)">
                       <span class="solution-num">C</span>
                       <span>
-                        <span class="sol-title-text">Multi-Thread Architecture</span>
-                        <span class="sol-sub-text">Break the work into distinct thread phases (Scoping → Outline → Build).</span>
+                        <span class="sol-title-text">Chunk it out</span>
+                        <span class="sol-sub-text">One chat per phase, not one chat for the whole job.</span>
                       </span>
                       <span class="sol-toggle">+</span>
                     </button>
                     <div class="solution-body"><div class="solution-body-inner"><div class="solution-content">
-                      <p>Divide your work streams. Let Thread 1 write the outline, and pass it to Thread 2 for copy generation.</p>
+                      <p>An overeager intern gets in trouble when handed a forty-step project. Hand them one step. Building a thirty-slide deck? Don't do it in one chat — open three: chat one writes the brief, chat two handles research and outline, chat three executes the build. Each chat is small enough that the model stays sharp, and you get a clean handoff to review between phases. The "three-chat architecture" is the universal pattern.</p>
                       <div class="prompt-box">
                         <div class="prompt-box-header"><span>Tactical Prompt</span><button class="btn-copy" onclick="copyPromptText(this)">Copy</button></div>
                         <pre>Don't try to build this in one chat. Lay out a three-chat plan for me: chat 1 = scoping and brief, chat 2 = research and outline, chat 3 = final build. For each chat, tell me what artifact comes out of it and exactly what I should paste into the next chat as the seed. We'll execute one chat at a time. Start with chat 1.</pre>
@@ -2193,13 +2205,13 @@
                     <button class="solution-header" onclick="toggleSolution(this)">
                       <span class="solution-num">D</span>
                       <span>
-                        <span class="sol-title-text">Ingredient Locking</span>
-                        <span class="sol-sub-text">Confirm baseline facts and structure before compiling assets.</span>
+                        <span class="sol-title-text">Lock pieces before the build</span>
+                        <span class="sol-sub-text">Research, copy, analogies — agreed before any draft.</span>
                       </span>
                       <span class="sol-toggle">+</span>
                     </button>
                     <div class="solution-body"><div class="solution-body-inner"><div class="solution-content">
-                      <p>Run separate sub-tasks to lock down details (headlines, structural grids) before generating layout text.</p>
+                      <p>Before the final assemble, lock the load-bearing pieces in their own focused passes. Get the structure right in one chat. Workshop the headline. Argue out the analogy. Verify the data. Each lives as a short reference doc you paste into the build chat as a seed. By the time the build chat sees its first prompt, half the work is already settled — and the intern has nothing left to guess about.</p>
                       <div class="prompt-box">
                         <div class="prompt-box-header"><span>Tactical Prompt</span><button class="btn-copy" onclick="copyPromptText(this)">Copy</button></div>
                         <pre>Before we generate the final [deck / page / doc], let's lock in the parts separately. In this chat, just nail down [STRUCTURE / HEADLINE / ANALOGY / KEY DATA]. Output it as a clean one-page reference doc I can paste into the build chat later. Do not draft the whole thing yet.</pre>
@@ -2281,13 +2293,13 @@
                     <button class="solution-header" onclick="toggleSolution(this)">
                       <span class="solution-num">A</span>
                       <span>
-                        <span class="sol-title-text">Negative Style Guidelines</span>
-                        <span class="sol-sub-text">Explicitly ban specific clichés, verbs, and punctuation styles.</span>
+                        <span class="sol-title-text">Negative style guides</span>
+                        <span class="sol-sub-text">Tell the model what NOT to write.</span>
                       </span>
                       <span class="sol-toggle">+</span>
                     </button>
                     <div class="solution-body"><div class="solution-body-inner"><div class="solution-content">
-                      <p>Stop telling the model to be "creative." Ban the words and structural habits that make it sound generic.</p>
+                      <p>Positive style instructions ("be conversational") fail because every other prompt also asks for conversational. Banning specific phrases, sentence structures, and rhetorical moves forces the model off the well-trodden path.</p>
                       <div class="prompt-box">
                         <div class="prompt-box-header"><span>Tactical Prompt</span><button class="btn-copy" onclick="copyPromptText(this)">Copy</button></div>
                         <pre>Rewrite the text below. Banned: em-dashes, the words "actually," "simply," "crucial," "essential," "navigate," "leverage," "in today's world." No three-item lists. No "It's not just X, it's Y." Use short sentences. Sound like a tired editor, not a cheerful copywriter.</pre>
@@ -2299,13 +2311,13 @@
                     <button class="solution-header" onclick="toggleSolution(this)">
                       <span class="solution-num">B</span>
                       <span>
-                        <span class="sol-title-text">Divergent Multi-Draft Generation</span>
-                        <span class="sol-sub-text">Force the model to output multiple variations, then extract the best elements.</span>
+                        <span class="sol-title-text">Force divergence, then choose</span>
+                        <span class="sol-sub-text">Five wildly different drafts, then pick one.</span>
                       </span>
                       <span class="sol-toggle">+</span>
                     </button>
                     <div class="solution-body"><div class="solution-body-inner"><div class="solution-content">
-                      <p>Obtain multiple options in different voices, and combine the best bits into your final draft.</p>
+                      <p>Asking for one draft gets you the median. Asking for five drafts in distinct voices pulls them apart and gives you raw material to pick from. The fifth or sixth option is usually the most interesting because the model has run out of clichés by then.</p>
                       <div class="prompt-box">
                         <div class="prompt-box-header"><span>Tactical Prompt</span><button class="btn-copy" onclick="copyPromptText(this)">Copy</button></div>
                         <pre>Give me five wildly different drafts of this paragraph. Each commits to a distinct voice: one cynical, one tender, one technical, one journalistic, one essayistic. After the five, recommend which fits this audience best, and explain in one sentence why the other four don't.</pre>
@@ -2317,13 +2329,13 @@
                     <button class="solution-header" onclick="toggleSolution(this)">
                       <span class="solution-num">C</span>
                       <span>
-                        <span class="sol-title-text">Personal Voice File Analysis</span>
-                        <span class="sol-sub-text">Provide sample text to let the model build a style guide based on your voice.</span>
+                        <span class="sol-title-text">Voice files</span>
+                        <span class="sol-sub-text">Capture your style, give it to every chat.</span>
                       </span>
                       <span class="sol-toggle">+</span>
                     </button>
                     <div class="solution-body"><div class="solution-body-inner"><div class="solution-content">
-                      <p>Train the model on your writing. Give it raw samples and have it extract a voice template.</p>
+                      <p>The fastest way out of the average is to anchor the model to a specific real voice (yours). A voice file with samples, banned phrases, and structural habits, attached to every project, replaces the median with you.</p>
                       <div class="prompt-box">
                         <div class="prompt-box-header"><span>Tactical Prompt</span><button class="btn-copy" onclick="copyPromptText(this)">Copy</button></div>
                         <pre>Read the five samples of my writing below. Draft a voice guide for me as a markdown file: sentence length, word preferences, structural habits, banned phrases, and what I never do. Include three example "before AI / after voice" rewrites so I can attach this to future projects.</pre>
@@ -2335,13 +2347,13 @@
                     <button class="solution-header" onclick="toggleSolution(this)">
                       <span class="solution-num">D</span>
                       <span>
-                        <span class="sol-title-text">Predictive Obviousness Ban</span>
-                        <span class="sol-sub-text">Identify common angles and forbid them.</span>
+                        <span class="sol-title-text">Anti-consensus seeds</span>
+                        <span class="sol-sub-text">Start from the obvious take, then deliberately avoid it.</span>
                       </span>
                       <span class="sol-toggle">+</span>
                     </button>
                     <div class="solution-body"><div class="solution-body-inner"><div class="solution-content">
-                      <p>Have the model analyze predictable positions on a topic, then write a draft avoiding all of them.</p>
+                      <p>List the predictable takes first, then forbid them. Forces the model to find a less-trodden angle. Especially useful for opinion writing, thought-leadership posts, and anything that needs to feel like a person.</p>
                       <div class="prompt-box">
                         <div class="prompt-box-header"><span>Tactical Prompt</span><button class="btn-copy" onclick="copyPromptText(this)">Copy</button></div>
                         <pre>Before writing, list the five most predictable takes on this topic. Then write the draft so it deliberately avoids each of them. Lead with the counterintuitive angle a smart skeptic would respect. Reference the consensus only to push against it.</pre>
@@ -2435,13 +2447,13 @@
                     <button class="solution-header" onclick="toggleSolution(this)">
                       <span class="solution-num">A</span>
                       <span>
-                        <span class="sol-title-text">Strict Source Pinning</span>
-                        <span class="sol-sub-text">Force the model to answer only from provided files.</span>
+                        <span class="sol-title-text">Grounded retrieval (RAG)</span>
+                        <span class="sol-sub-text">Pin the model to real source documents.</span>
                       </span>
                       <span class="sol-toggle">+</span>
                     </button>
                     <div class="solution-body"><div class="solution-body-inner"><div class="solution-content">
-                      <p>Stop the model from pulling from general knowledge. Require explicit citations and quote links.</p>
+                      <p>Retrieval-augmented generation. Instead of trusting the model's memory, you give it the relevant documents and tell it to answer only from them. NotebookLM, Claude Projects with files, Custom GPTs with knowledge — all variants of RAG for non-builders.</p>
                       <div class="prompt-box">
                         <div class="prompt-box-header"><span>Tactical Prompt</span><button class="btn-copy" onclick="copyPromptText(this)">Copy</button></div>
                         <pre>Answer only from the documents I attached. If the answer is not in the documents, say "not in source" and stop. For every claim, cite the filename and quote the exact supporting sentence. Do not blend in your training data.</pre>
@@ -2453,13 +2465,13 @@
                     <button class="solution-header" onclick="toggleSolution(this)">
                       <span class="solution-num">B</span>
                       <span>
-                        <span class="sol-title-text">Skeptical Fact-Checker Pass</span>
-                        <span class="sol-sub-text">Open a separate chat specifically to find draft errors.</span>
+                        <span class="sol-title-text">Adversarial fact-checker</span>
+                        <span class="sol-sub-text">A second pass tasked with finding errors, not approving.</span>
                       </span>
                       <span class="sol-toggle">+</span>
                     </button>
                     <div class="solution-body"><div class="solution-body-inner"><div class="solution-content">
-                      <p>Paste your compiled draft into a new chat, telling the model its only goal is to flag claims it cannot verify.</p>
+                      <p>Open a fresh chat or switch personas. Tell the model its job is to flag claims that aren't verifiable, not to rewrite or improve. Favor false positives. Works for any draft, plan, report, or pitch — and the fact-checker chat doesn't need any context other than the draft itself.</p>
                       <div class="prompt-box">
                         <div class="prompt-box-header"><span>Tactical Prompt</span><button class="btn-copy" onclick="copyPromptText(this)">Copy</button></div>
                         <pre>You are a skeptical fact-checker, not a writer. Read the draft below and flag every claim that is not 100% verifiable. For each flagged claim, propose the specific check or source I'd need to confirm it. Favor false positives. Do not rewrite anything.</pre>
@@ -2471,13 +2483,13 @@
                     <button class="solution-header" onclick="toggleSolution(this)">
                       <span class="solution-num">C</span>
                       <span>
-                        <span class="sol-title-text">Forced Live Search Citations</span>
-                        <span class="sol-sub-text">Require at least two live, recent URLs for factual claims.</span>
+                        <span class="sol-title-text">Force web search</span>
+                        <span class="sol-sub-text">Require live citations from recent sources.</span>
                       </span>
                       <span class="sol-toggle">+</span>
                     </button>
                     <div class="solution-body"><div class="solution-body-inner"><div class="solution-content">
-                      <p>Direct the model to run web queries and cite real URLs for news and static figures.</p>
+                      <p>Modern chat products ship with web search by default but use it inconsistently. Forcing the model to search and cite recent sources turns it from a confident guesser into a researcher. Works in ChatGPT, Claude, Gemini, Grok, Perplexity.</p>
                       <div class="prompt-box">
                         <div class="prompt-box-header"><span>Tactical Prompt</span><button class="btn-copy" onclick="copyPromptText(this)">Copy</button></div>
                         <pre>Search the web before answering. Cite at least two sources published in the last 90 days. If you cannot find recent reliable sources, say so plainly and do not fall back on training data. Prefer primary sources over aggregators.</pre>
@@ -2489,13 +2501,13 @@
                     <button class="solution-header" onclick="toggleSolution(this)">
                       <span class="solution-num">D</span>
                       <span>
-                        <span class="sol-title-text">Confidence Grading Indicators</span>
-                        <span class="sol-sub-text">Direct the model to rate the certainty of its statements.</span>
+                        <span class="sol-title-text">Confidence calibration</span>
+                        <span class="sol-sub-text">Make the model rate its own certainty.</span>
                       </span>
                       <span class="sol-toggle">+</span>
                     </button>
                     <div class="solution-body"><div class="solution-body-inner"><div class="solution-content">
-                      <p>Make the model grade the certainty of its statements, flagging items that require manual review.</p>
+                      <p>Models give the same confident tone to known facts and to guesses. Ask explicitly for a confidence rating per claim. Reasoning models with extended thinking are best at this; even without them, the prompt itself surfaces uncertainty that would otherwise hide.</p>
                       <div class="prompt-box">
                         <div class="prompt-box-header"><span>Tactical Prompt</span><button class="btn-copy" onclick="copyPromptText(this)">Copy</button></div>
                         <pre>Answer my question below. After each factual claim, attach a confidence rating: HIGH, MEDIUM, or LOW. Anything LOW must include the specific reason for uncertainty. At the end, list which claims I should personally verify before relying on them.</pre>
@@ -2579,13 +2591,13 @@
                     <button class="solution-header" onclick="toggleSolution(this)">
                       <span class="solution-num">A</span>
                       <span>
-                        <span class="sol-title-text">Handoff Note Hygiene</span>
-                        <span class="sol-sub-text">Summarize states and open a fresh thread.</span>
+                        <span class="sol-title-text">Fresh session hygiene</span>
+                        <span class="sol-sub-text">Close, hand off, start clean.</span>
                       </span>
                       <span class="sol-toggle">+</span>
                     </button>
                     <div class="solution-body"><div class="solution-body-inner"><div class="solution-content">
-                      <p>When the model begins repeating bugs, generate a summary note, close the tab, and start fresh.</p>
+                      <p>The simplest move. When work drifts or quality slides, end the session with a written handoff and start a new chat with that handoff as the seed. Avoids the "kitchen sink session" anti-pattern where unrelated tasks pile up and rot the context.</p>
                       <div class="prompt-box">
                         <div class="prompt-box-header"><span>Tactical Prompt</span><button class="btn-copy" onclick="copyPromptText(this)">Copy</button></div>
                         <pre>I'm ending this session. Write a clean handoff note I can paste into a new chat as the seed. Include only: what we decided, what's still open, what conventions we agreed on, and any files or links that matter. Skip nostalgia.</pre>
@@ -2597,13 +2609,13 @@
                     <button class="solution-header" onclick="toggleSolution(this)">
                       <span class="solution-num">B</span>
                       <span>
-                        <span class="sol-title-text">Isolated Subtask Dispatches</span>
-                        <span class="sol-sub-text">Dispatch complex side work to isolated secondary chats.</span>
+                        <span class="sol-title-text">Subagent dispatch</span>
+                        <span class="sol-sub-text">Send heavy work to isolated fresh chats.</span>
                       </span>
                       <span class="sol-toggle">+</span>
                     </button>
                     <div class="solution-body"><div class="solution-body-inner"><div class="solution-content">
-                      <p>Run separate subtasks (heavy code refactors, text drafting) in other tabs, bringing back only the final files to the main thread.</p>
+                      <p>Instead of loading 30 documents into one session and letting context rot, spin up parallel chats for each chunk and bring back only the summaries to a "lead" chat. Each side chat stays sharp because its scope is tiny, and your main chat never gets overloaded.</p>
                       <div class="prompt-box">
                         <div class="prompt-box-header"><span>Tactical Prompt</span><button class="btn-copy" onclick="copyPromptText(this)">Copy</button></div>
                         <pre>Don't load everything into our session. Outline a process where the analysis is split across separate fresh chats, each with a focused scope. Give me the prompt to paste into each one. After each, the only thing returning to this thread is a five-line summary.</pre>
@@ -2615,13 +2627,13 @@
                     <button class="solution-header" onclick="toggleSolution(this)">
                       <span class="solution-num">C</span>
                       <span>
-                        <span class="sol-title-text">Instruction Compaction</span>
-                        <span class="sol-sub-text">Condense conversational history to reclaim context window.</span>
+                        <span class="sol-title-text">Compaction</span>
+                        <span class="sol-sub-text">Summarize the old parts to free room.</span>
                       </span>
                       <span class="sol-toggle">+</span>
                     </button>
                     <div class="solution-body"><div class="solution-body-inner"><div class="solution-content">
-                      <p>Have the model summarize the key decisions of the chat so far, clearing out old logs and brainstorming pages.</p>
+                      <p>When you don't want to start over, you compact: ask the model to summarize earlier turns into a tight state note, then continue from there. It's like asking your assistant to write down what you've decided so far before you both go grab lunch — the conversation can keep moving without dragging every detail along with it.</p>
                       <div class="prompt-box">
                         <div class="prompt-box-header"><span>Tactical Prompt</span><button class="btn-copy" onclick="copyPromptText(this)">Copy</button></div>
                         <pre>Compact our conversation so far into a tight state note. Keep: decisions, conventions, file names, unresolved questions, and any prompts we settled on. Drop: brainstorming asides, my false starts, the parts where you apologized. We'll continue from the compaction.</pre>
@@ -2633,13 +2645,13 @@
                     <button class="solution-header" onclick="toggleSolution(this)">
                       <span class="solution-num">D</span>
                       <span>
-                        <span class="sol-title-text">External Progress Document</span>
-                        <span class="sol-sub-text">Maintain a persistent markdown progress log in your workspace.</span>
+                        <span class="sol-title-text">Progress file</span>
+                        <span class="sol-sub-text">A text file that survives session boundaries.</span>
                       </span>
                       <span class="sol-toggle">+</span>
                     </button>
                     <div class="solution-body"><div class="solution-body-inner"><div class="solution-content">
-                      <p>Update a local task file (like task.md) after every session, re-injecting it at the start of new sessions.</p>
+                      <p>Keep a single document outside the chat — a Google Doc, an Obsidian note, a Notion page — that records what's done, what's open, what's been decided. Every new session reads it first and updates it at the end. State persists even when the conversation doesn't.</p>
                       <div class="prompt-box">
                         <div class="prompt-box-header"><span>Tactical Prompt</span><button class="btn-copy" onclick="copyPromptText(this)">Copy</button></div>
                         <pre>Help me maintain a "progress doc" for this project that lives outside the chat. At the end of each session, write three sections: WHAT WE DID, WHAT WE DECIDED, WHAT'S NEXT. Keep the whole doc under one page. I'll paste it back at the start of every new session so we never lose state.</pre>
@@ -2703,6 +2715,12 @@
               <button class="btn-copy" id="customCopyBtn" onclick="copyCustomPrompt()">Copy Kickoff Prompt</button>
             </div>
             <div class="kickoff-body" id="customPromptBody"></div>
+          </div>
+          <div class="pro-tip-box" style="margin-top: 1.5rem; padding: 1.25rem; background: rgba(224, 164, 88, 0.05); border-left: 3px solid var(--amber); border-radius: 8px;">
+            <span style="font-family: var(--font-mono); font-size: 11px; text-transform: uppercase; color: var(--amber); font-weight: 600; display: block; margin-bottom: 6px;">Pro Tip</span>
+            <p style="font-size: 13.5px; color: var(--text-muted); line-height: 1.55;">
+              Keep the Build step inside the instructions for now. Once the workflow proves itself, ask Claude in a separate chat to spin the build phase out into a reusable skill that generates the final file on command.
+            </p>
           </div>
         </div>
       </div>
